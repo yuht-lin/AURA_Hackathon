@@ -41,7 +41,8 @@ import {
   Trash2,
   ClipboardPaste,
   Sparkles,
-  PhoneCall
+  PhoneCall,
+  Activity
 } from "lucide-react";
 import { FullAegisInvestigation, DefenceRule } from "@/lib/types/agent";
 import { TRAINING_SCENARIOS, TrainingScenario } from "@/lib/data/trainingScenarios";
@@ -107,6 +108,9 @@ export default function Home() {
   const [investigation, setInvestigation] = useState<FullAegisInvestigation | null>(null);
   const [historyList, setHistoryList] = useState<FullAegisInvestigation[]>([]);
 
+  // Live real-time clock
+  const [currentTime, setCurrentTime] = useState("");
+
   // Defence Agent state
   const [defenceRules, setDefenceRules] = useState<DefenceRule[]>([]);
   const [sandboxExecuted, setSandboxExecuted] = useState(false);
@@ -127,6 +131,13 @@ export default function Home() {
   useEffect(() => {
     runInvestigation(QUICK_PRESETS[0].content);
     fetchCommunityData();
+
+    // Clock ticker
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString("en-GB", { hour12: false }));
+    }, 1000);
+    setCurrentTime(new Date().toLocaleTimeString("en-GB", { hour12: false }));
+    return () => clearInterval(timer);
   }, []);
 
   const fetchCommunityData = async () => {
@@ -293,13 +304,35 @@ export default function Home() {
       : TRAINING_SCENARIOS.filter((s) => s.language === trainingLanguage);
 
   return (
-    <div className="min-h-screen bg-[#05070e] text-slate-200 font-sans selection:bg-cyan-500/30 selection:text-cyan-200 flex flex-col justify-between">
+    <div className="min-h-screen bg-[#05070e] text-slate-200 font-sans selection:bg-cyan-500/30 selection:text-cyan-200 flex flex-col justify-between cyber-grid">
+      {/* LIVE SCROLLING THREAT INTELLIGENCE TICKER */}
+      <div className="bg-[#03050a] border-b border-cyan-950/60 py-1 overflow-hidden font-mono text-[11px] text-cyan-300 flex items-center">
+        <div className="px-3 bg-red-600 text-black font-extrabold uppercase shrink-0 flex items-center gap-1.5 z-10 shadow-md">
+          <Activity className="w-3 h-3 animate-pulse" />
+          <span>LIVE INTEL FEED</span>
+        </div>
+        <div className="overflow-hidden w-full whitespace-nowrap">
+          <div className="animate-marquee space-x-8 text-slate-300">
+            <span>🚨 [12:24:19] APDCL Power Cutoff Smishing intercepted in Guwahati (9:30 PM cutoff threat)</span>
+            <span>🛡️ [12:23:55] Malicious SBI NetBanking clone (.xyz) blocked across 14 ASN nodes</span>
+            <span>⚠️ [12:22:40] India Post ₹15 address smishing cluster quarantined (PrivateLayer Proxy)</span>
+            <span>🟢 [12:21:12] Amazon genuine OTP verification validated (Zero False Positive)</span>
+            <span>🚨 [12:19:30] Transnational Task Pig-Butchering Telegram compound flagged (Phnom Penh)</span>
+            <span>📡 [TELEMETRY] 1,482 rogue nodes actively tracked across Indian telecommunications gateways</span>
+            <span>🚨 [12:24:19] APDCL Power Cutoff Smishing intercepted in Guwahati (9:30 PM cutoff threat)</span>
+            <span>🛡️ [12:23:55] Malicious SBI NetBanking clone (.xyz) blocked across 14 ASN nodes</span>
+          </div>
+        </div>
+      </div>
+
       {/* Top Header Bar */}
       <header className="border-b border-slate-800/80 bg-[#080c16]/95 backdrop-blur sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 via-indigo-600 to-rose-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 via-indigo-600 to-rose-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 overflow-hidden">
               <ShieldAlert className="w-6 h-6 text-black stroke-[2.5]" />
+              {/* Spinning sonar effect */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-400/20 to-transparent radar-sweep pointer-events-none"></div>
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -320,6 +353,14 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Live Clock & Pulse */}
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px] text-slate-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span className="text-white font-bold">{currentTime || "12:25:00"}</span>
+              <span className="text-slate-600">|</span>
+              <span className="text-cyan-400">64ms RTT</span>
+            </div>
+
             {/* Simple vs Advanced View Toggle */}
             <div className="flex items-center bg-[#070b14] p-1 rounded-xl border border-slate-800 text-xs font-mono">
               <button
@@ -386,12 +427,18 @@ export default function Home() {
       {/* Main Content Body */}
       <main className="max-w-7xl mx-auto px-4 py-6 w-full flex-1">
         {/* Universal Payload Interception Workbench */}
-        <section className="bg-[#0b101d] rounded-2xl border border-slate-800/90 p-5 shadow-2xl mb-8 relative">
+        <section className="bg-[#0b101d] rounded-2xl border border-slate-800/90 p-5 shadow-2xl mb-8 relative overflow-hidden glow-cyan">
+          {/* Laser Scanline Beam when investigating */}
+          {isInvestigating && (
+            <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent laser-beam z-20 pointer-events-none"></div>
+          )}
+
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-3 border-b border-slate-800 gap-2">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
-              <h2 className="font-bold text-sm sm:text-base text-white">
-                Paste or Type Any Suspicious Message Below
+              <h2 className="font-bold text-sm sm:text-base text-white font-mono flex items-center gap-2">
+                <span>INTERCEPTION WORKBENCH</span>
+                <span className="text-[10px] text-slate-500 font-normal">[READY]</span>
               </h2>
             </div>
 
@@ -399,7 +446,7 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <button
                 onClick={handlePasteClipboard}
-                className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-cyan-300 font-mono flex items-center gap-1 border border-slate-700 transition"
+                className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-cyan-300 font-mono flex items-center gap-1 border border-slate-700 transition active:scale-95"
                 title="Paste from clipboard"
               >
                 <ClipboardPaste className="w-3.5 h-3.5" />
@@ -408,7 +455,7 @@ export default function Home() {
               {inputPayload && (
                 <button
                   onClick={handleClearText}
-                  className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-red-950 text-xs text-slate-400 hover:text-red-300 font-mono flex items-center gap-1 border border-slate-700 transition"
+                  className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-red-950 text-xs text-slate-400 hover:text-red-300 font-mono flex items-center gap-1 border border-slate-700 transition active:scale-95"
                   title="Clear text"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -421,7 +468,7 @@ export default function Home() {
           {/* Quick Presets */}
           <div className="mb-3">
             <span className="text-[11px] font-mono text-slate-400 block mb-1.5">
-              Or click an example to test instantly:
+              Click an example to test instantly:
             </span>
             <div className="flex flex-wrap gap-2">
               {QUICK_PRESETS.map((preset) => (
@@ -431,7 +478,7 @@ export default function Home() {
                     setInputPayload(preset.content);
                     runInvestigation(preset.content);
                   }}
-                  className="px-2.5 py-1 rounded-lg bg-[#0f172a] hover:bg-slate-800 border border-slate-700/60 text-xs font-mono text-slate-300 hover:text-white transition flex items-center gap-1.5"
+                  className="px-2.5 py-1 rounded-lg bg-[#0f172a] hover:bg-slate-800 border border-slate-700/60 text-xs font-mono text-slate-300 hover:text-white transition active:scale-95 flex items-center gap-1.5"
                 >
                   <span>{preset.label}</span>
                 </button>
@@ -466,12 +513,12 @@ export default function Home() {
             <button
               onClick={() => runInvestigation()}
               disabled={isInvestigating || !inputPayload.trim()}
-              className="w-full sm:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-600 via-indigo-600 to-rose-600 hover:from-cyan-500 hover:to-rose-500 text-white font-mono font-black text-sm uppercase tracking-wider transition shadow-lg shadow-cyan-600/30 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-600 via-indigo-600 to-rose-600 hover:from-cyan-500 hover:to-rose-500 text-white font-mono font-black text-sm uppercase tracking-wider transition shadow-lg shadow-cyan-600/30 flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95"
             >
               {isInvestigating ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>ANALYZING THREAT...</span>
+                  <RefreshCw className="w-4 h-4 animate-spin text-cyan-300" />
+                  <span>SWEEPING VECTORS...</span>
                 </>
               ) : (
                 <>
@@ -488,27 +535,29 @@ export default function Home() {
         {/* ============================================================== */}
         {viewMode === "simple" && investigation && (
           <div className="space-y-6 animate-fadeIn">
-            {/* Big Unmistakable Verdict Banner */}
+            {/* Big Unmistakable Verdict Banner with Animated Circular Radar Dial */}
             <div
               className={`p-6 sm:p-8 rounded-2xl border ${
                 investigation.riskIntelligence.finalScore >= 50
-                  ? "bg-red-950/40 border-red-500 shadow-2xl shadow-red-950/50"
-                  : "bg-emerald-950/40 border-emerald-500 shadow-2xl shadow-emerald-950/50"
+                  ? "bg-red-950/40 border-red-500 shadow-2xl glow-red"
+                  : "bg-emerald-950/40 border-emerald-500 shadow-2xl glow-cyan"
               }`}
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div className="flex items-start gap-4">
                   <div
-                    className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${
+                    className={`relative w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 overflow-hidden ${
                       investigation.riskIntelligence.finalScore >= 50
                         ? "bg-red-600 text-black shadow-lg shadow-red-600/40"
                         : "bg-emerald-500 text-black shadow-lg shadow-emerald-500/40"
                     }`}
                   >
+                    {/* Sonar sweep inside badge */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent radar-sweep pointer-events-none"></div>
                     {investigation.riskIntelligence.finalScore >= 50 ? (
-                      <AlertOctagon className="w-8 h-8 stroke-[2.5]" />
+                      <AlertOctagon className="w-9 h-9 stroke-[2.5]" />
                     ) : (
-                      <CheckCircle2 className="w-8 h-8 stroke-[2.5]" />
+                      <CheckCircle2 className="w-9 h-9 stroke-[2.5]" />
                     )}
                   </div>
                   <div>
@@ -532,19 +581,35 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="text-left sm:text-right shrink-0">
-                  <div
-                    className={`text-5xl font-mono font-black ${
-                      investigation.riskIntelligence.finalScore >= 50
-                        ? "text-red-400"
-                        : "text-emerald-400"
-                    }`}
-                  >
-                    {investigation.riskIntelligence.finalScore}%
+                {/* Animated Circular Radar Dial */}
+                <div className="flex items-center gap-4 shrink-0">
+                  <div className="relative w-20 h-20 flex items-center justify-center">
+                    <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                      {/* Background circle */}
+                      <path
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none"
+                        stroke="#1e293b"
+                        strokeWidth="3.5"
+                      />
+                      {/* Colored Progress Ring */}
+                      <path
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none"
+                        stroke={investigation.riskIntelligence.finalScore >= 50 ? "#ef4444" : "#10b981"}
+                        strokeWidth="3.5"
+                        strokeDasharray={`${investigation.riskIntelligence.finalScore}, 100`}
+                        strokeLinecap="round"
+                        className="transition-all duration-1000 ease-out"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className={`text-xl font-mono font-black ${investigation.riskIntelligence.finalScore >= 50 ? "text-red-400" : "text-emerald-400"}`}>
+                        {investigation.riskIntelligence.finalScore}%
+                      </span>
+                      <span className="text-[8px] font-mono text-slate-400 uppercase font-bold">RISK</span>
+                    </div>
                   </div>
-                  <span className="text-[10px] font-mono uppercase text-slate-400 font-bold block">
-                    Threat Risk Level
-                  </span>
                 </div>
               </div>
             </div>
@@ -552,7 +617,7 @@ export default function Home() {
             {/* 3 Simple Action Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Card 1: What is happening */}
-              <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-2">
+              <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-2 glow-cyan">
                 <span className="text-xs font-bold text-cyan-400 flex items-center gap-1.5 uppercase font-mono">
                   <Info className="w-4 h-4 text-cyan-400" />
                   1. What is this message?
@@ -568,7 +633,7 @@ export default function Home() {
               </div>
 
               {/* Card 2: What is the trap */}
-              <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-2">
+              <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-2 glow-amber">
                 <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5 uppercase font-mono">
                   <Zap className="w-4 h-4 text-amber-400" />
                   2. What is the danger?
@@ -583,7 +648,7 @@ export default function Home() {
               </div>
 
               {/* Card 3: What should you do right now */}
-              <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-2">
+              <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-2 glow-cyan">
                 <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5 uppercase font-mono">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
                   3. What should you do?
@@ -596,7 +661,7 @@ export default function Home() {
                 <div className="pt-1">
                   <a
                     href="tel:1930"
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-black font-mono text-xs font-bold"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-black font-mono text-xs font-bold shadow-lg shadow-red-600/30 active:scale-95"
                   >
                     <PhoneCall className="w-3.5 h-3.5" />
                     <span>Call Helpline: 1930</span>
@@ -612,7 +677,7 @@ export default function Home() {
               </span>
               <button
                 onClick={() => setViewMode("advanced")}
-                className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-black font-bold flex items-center gap-1 transition"
+                className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-black font-bold flex items-center gap-1 transition active:scale-95 shadow-md shadow-cyan-600/30"
               >
                 <span>Switch to Advanced SOC View</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -633,8 +698,8 @@ export default function Home() {
                 <div
                   className={`p-6 rounded-2xl border ${
                     investigation.riskIntelligence.finalScore >= 60
-                      ? "bg-red-950/30 border-red-500/80 shadow-2xl shadow-red-900/30"
-                      : "bg-emerald-950/30 border-emerald-500/80 shadow-2xl shadow-emerald-900/30"
+                      ? "bg-red-950/30 border-red-500/80 shadow-2xl shadow-red-900/30 glow-red"
+                      : "bg-emerald-950/30 border-emerald-500/80 shadow-2xl shadow-emerald-900/30 glow-cyan"
                   }`}
                 >
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -734,7 +799,7 @@ export default function Home() {
                   <div className="flex gap-2 shrink-0">
                     <button
                       onClick={() => setActiveTab("analyzer")}
-                      className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-mono text-xs font-bold transition flex items-center gap-1.5"
+                      className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-mono text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-cyan-600/30"
                     >
                       <span>DEEP SCAN REPORT</span>
                       <ChevronRight className="w-3.5 h-3.5" />
@@ -1008,7 +1073,7 @@ export default function Home() {
               </div>
             )}
 
-            {/* SECTION 5: THREAT INTELLIGENCE */}
+            {/* SECTION 5: THREAT INTELLIGENCE WITH PULSING TARGET RADAR */}
             {activeTab === "threatIntel" && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-800">
@@ -1017,18 +1082,43 @@ export default function Home() {
                     <span>GLOBAL THREAT INFRASTRUCTURE INTELLIGENCE</span>
                   </h3>
                 </div>
-                <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-3 font-mono text-xs">
-                  <div className="flex justify-between py-1.5 border-b border-slate-800">
-                    <span className="text-slate-500">Hosting ASN:</span>
-                    <strong className="text-amber-300">{investigation.threatIntelligence.asnInfo}</strong>
+
+                <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-4">
+                  {/* SVG Vector World Map with Multiple Expanding Sonar Rings */}
+                  <div className="relative w-full h-72 bg-[#050811] rounded-xl border border-slate-800 overflow-hidden flex items-center justify-center">
+                    <svg className="w-full h-full opacity-30" viewBox="0 0 100 60">
+                      <path
+                        d="M10,20 Q25,10 35,22 Q40,30 30,45 Q20,50 15,35 Z M45,15 Q65,12 85,20 Q90,35 75,45 Q60,48 50,35 Z M50,30 Q60,25 70,35 Q65,55 50,45 Z"
+                        fill="#334155"
+                      />
+                    </svg>
+
+                    {/* Expanding Sonar Waves */}
+                    <div className="absolute z-10 flex flex-col items-center">
+                      <span className="w-16 h-16 rounded-full bg-red-500/20 animate-ping absolute"></span>
+                      <span className="w-10 h-10 rounded-full bg-red-500/30 animate-pulse absolute"></span>
+                      <span className="w-4 h-4 rounded-full bg-red-500 border-2 border-white shadow-xl flex items-center justify-center">
+                        <Crosshair className="w-2.5 h-2.5 text-black" />
+                      </span>
+                      <span className="mt-2 text-[10px] font-mono font-bold bg-black/90 text-red-300 px-2 py-0.5 rounded border border-red-800 shadow-md">
+                        {investigation.threatIntelligence.infrastructureLocation.city}, {investigation.threatIntelligence.infrastructureLocation.country}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex justify-between py-1.5 border-b border-slate-800">
-                    <span className="text-slate-500">Domain Assessment:</span>
-                    <strong className="text-red-400">{investigation.threatIntelligence.domainReputation}</strong>
-                  </div>
-                  <div className="flex justify-between py-1.5">
-                    <span className="text-slate-500">Infrastructure Node:</span>
-                    <strong className="text-cyan-300">{investigation.threatIntelligence.infrastructureLocation.city}, {investigation.threatIntelligence.infrastructureLocation.country}</strong>
+
+                  <div className="space-y-2 font-mono text-xs pt-2">
+                    <div className="flex justify-between py-1.5 border-b border-slate-800">
+                      <span className="text-slate-500">Hosting ASN:</span>
+                      <strong className="text-amber-300">{investigation.threatIntelligence.asnInfo}</strong>
+                    </div>
+                    <div className="flex justify-between py-1.5 border-b border-slate-800">
+                      <span className="text-slate-500">Domain Assessment:</span>
+                      <strong className="text-red-400">{investigation.threatIntelligence.domainReputation}</strong>
+                    </div>
+                    <div className="flex justify-between py-1.5">
+                      <span className="text-slate-500">Infrastructure Node:</span>
+                      <strong className="text-cyan-300">{investigation.threatIntelligence.infrastructureLocation.city}, {investigation.threatIntelligence.infrastructureLocation.country}</strong>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1158,14 +1248,14 @@ export default function Home() {
                   <div className="flex gap-2">
                     <button
                       onClick={handleDownloadDossier}
-                      className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-black font-bold flex items-center gap-1.5"
+                      className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-black font-bold flex items-center gap-1.5 shadow-md shadow-cyan-600/30 active:scale-95"
                     >
                       <Download className="w-3.5 h-3.5" />
                       <span>POLICE 1930 DOSSIER</span>
                     </button>
                     <button
                       onClick={handleDownloadStix}
-                      className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold flex items-center gap-1.5"
+                      className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold flex items-center gap-1.5 active:scale-95"
                     >
                       <FileText className="w-3.5 h-3.5" />
                       <span>STIX 2.1 JSON</span>
@@ -1251,13 +1341,13 @@ export default function Home() {
                           <div className="flex gap-2 pt-1">
                             <button
                               onClick={() => handleQuizAnswer(scenario, true)}
-                              className="flex-1 py-2 rounded-lg bg-red-950 hover:bg-red-900 border border-red-800 text-red-300 font-bold"
+                              className="flex-1 py-2 rounded-lg bg-red-950 hover:bg-red-900 border border-red-800 text-red-300 font-bold active:scale-95"
                             >
                               Mark as Fraudulent
                             </button>
                             <button
                               onClick={() => handleQuizAnswer(scenario, false)}
-                              className="flex-1 py-2 rounded-lg bg-emerald-950 hover:bg-emerald-900 border border-emerald-800 text-emerald-300 font-bold"
+                              className="flex-1 py-2 rounded-lg bg-emerald-950 hover:bg-emerald-900 border border-emerald-800 text-emerald-300 font-bold active:scale-95"
                             >
                               Mark as Legitimate
                             </button>
