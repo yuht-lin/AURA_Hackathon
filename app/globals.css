@@ -5,6 +5,9 @@
 :root {
   --background: #04060c;
   --foreground: #f1f5f9;
+  --cyan: #06b6d4;
+  --indigo: #6366f1;
+  --rose: #f43f5e;
 }
 
 body {
@@ -15,61 +18,113 @@ body {
   overflow-x: hidden;
 }
 
-/* =============================================
-   AMBIENT AURORA ORBS — Smooth floating glows
-   ============================================= */
+/* ═══════════════════════════════════════════════════
+   HEX GRID BACKGROUND — subtle futuristic mesh
+   ═══════════════════════════════════════════════════ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(6, 182, 212, 0.04) 1px, transparent 0);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══════════════════════════════════════════════════
+   AURORA ORBS — multi-axis drift
+   ═══════════════════════════════════════════════════ */
 @keyframes float-slow {
-  0%, 100% { transform: translateY(0px) scale(1) rotate(0deg); opacity: 0.7; }
-  33%       { transform: translateY(-28px) scale(1.06) rotate(2deg); opacity: 0.9; }
-  66%       { transform: translateY(-12px) scale(0.97) rotate(-1deg); opacity: 0.75; }
+  0%,100% { transform: translateY(0px)   scale(1)    rotate(0deg);  opacity: 0.75; }
+  25%      { transform: translateY(-32px) scale(1.07) rotate(3deg);  opacity: 1;    }
+  60%      { transform: translateY(-14px) scale(0.96) rotate(-2deg); opacity: 0.8;  }
 }
-
 @keyframes float-reverse {
-  0%, 100% { transform: translateY(0px) scale(1.05) rotate(0deg); opacity: 0.65; }
-  40%       { transform: translateY(24px) scale(0.94) rotate(-2deg); opacity: 0.85; }
-  70%       { transform: translateY(10px) scale(1.02) rotate(1deg); opacity: 0.7; }
+  0%,100% { transform: translateY(0px) scale(1.04) rotate(0deg);  opacity: 0.6;  }
+  35%      { transform: translateY(28px) scale(0.93) rotate(-3deg); opacity: 0.85; }
+  70%      { transform: translateY(12px) scale(1.02) rotate(2deg);  opacity: 0.7;  }
 }
-
 @keyframes float-drift {
-  0%, 100% { transform: translateX(0px) translateY(0px) scale(1); opacity: 0.5; }
-  25%       { transform: translateX(20px) translateY(-15px) scale(1.08); opacity: 0.7; }
-  50%       { transform: translateX(-10px) translateY(-25px) scale(0.95); opacity: 0.6; }
-  75%       { transform: translateX(15px) translateY(-8px) scale(1.03); opacity: 0.65; }
+  0%,100% { transform: translateX(0)    translateY(0)    scale(1);    opacity: 0.55; }
+  20%      { transform: translateX(24px) translateY(-18px) scale(1.09); opacity: 0.75; }
+  50%      { transform: translateX(-14px) translateY(-28px) scale(0.94); opacity: 0.6; }
+  75%      { transform: translateX(18px)  translateY(-10px) scale(1.04); opacity: 0.65; }
+}
+@keyframes float-pulse {
+  0%,100% { transform: scale(1);    opacity: 0.4; }
+  50%      { transform: scale(1.15); opacity: 0.7; }
 }
 
-.animate-float-1 { animation: float-slow 14s ease-in-out infinite; }
-.animate-float-2 { animation: float-reverse 18s ease-in-out infinite; }
-.animate-float-3 { animation: float-drift 22s ease-in-out infinite; }
+.animate-float-1 { animation: float-slow    15s ease-in-out infinite; }
+.animate-float-2 { animation: float-reverse 19s ease-in-out infinite; }
+.animate-float-3 { animation: float-drift   24s ease-in-out infinite; }
+.animate-float-4 { animation: float-pulse   10s ease-in-out infinite; }
 
-/* =============================================
-   NEURAL EQUALIZER WAVEFORM
-   ============================================= */
+/* ═══════════════════════════════════════════════════
+   CYBER GRID LINES — sparse animated horizontal bars
+   ═══════════════════════════════════════════════════ */
+@keyframes grid-flash {
+  0%,90%,100% { opacity: 0;    transform: scaleX(0.4); }
+  45%          { opacity: 0.18; transform: scaleX(1);   }
+}
+.cyber-line {
+  position: absolute;
+  left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(6,182,212,0.3) 40%, rgba(99,102,241,0.3) 60%, transparent 100%);
+  pointer-events: none;
+  animation: grid-flash 6s ease-in-out infinite;
+}
+.cyber-line:nth-child(1) { top: 18%;  animation-delay: 0s;   animation-duration: 7s; }
+.cyber-line:nth-child(2) { top: 42%;  animation-delay: 2.1s; animation-duration: 9s; }
+.cyber-line:nth-child(3) { top: 68%;  animation-delay: 4.3s; animation-duration: 6s; }
+.cyber-line:nth-child(4) { top: 85%;  animation-delay: 1.5s; animation-duration: 8s; }
+
+/* ═══════════════════════════════════════════════════
+   NEURAL WAVEFORM EQUALIZER
+   ═══════════════════════════════════════════════════ */
 @keyframes wave-bounce {
-  0%, 100% { height: 4px;  opacity: 0.5; }
-  50%       { height: 28px; opacity: 1;   }
+  0%,100% { height: 3px;  opacity: 0.4; }
+  50%      { height: 30px; opacity: 1;   }
 }
-
-.wave-bar { animation: wave-bounce 1.4s ease-in-out infinite; }
+.wave-bar { animation: wave-bounce 1.3s ease-in-out infinite; }
 .wave-bar:nth-child(1) { animation-delay: 0.00s; }
-.wave-bar:nth-child(2) { animation-delay: 0.12s; }
-.wave-bar:nth-child(3) { animation-delay: 0.24s; }
-.wave-bar:nth-child(4) { animation-delay: 0.36s; }
-.wave-bar:nth-child(5) { animation-delay: 0.48s; }
-.wave-bar:nth-child(6) { animation-delay: 0.60s; }
-.wave-bar:nth-child(7) { animation-delay: 0.72s; }
+.wave-bar:nth-child(2) { animation-delay: 0.11s; }
+.wave-bar:nth-child(3) { animation-delay: 0.22s; }
+.wave-bar:nth-child(4) { animation-delay: 0.33s; }
+.wave-bar:nth-child(5) { animation-delay: 0.44s; }
+.wave-bar:nth-child(6) { animation-delay: 0.55s; }
+.wave-bar:nth-child(7) { animation-delay: 0.66s; }
+.wave-bar:nth-child(8) { animation-delay: 0.77s; }
 
-/* =============================================
-   RADAR SWEEP — logo & verdict icon
-   ============================================= */
+/* ═══════════════════════════════════════════════════
+   RADAR SWEEP — rotating gradient
+   ═══════════════════════════════════════════════════ */
 @keyframes radar-sweep {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
-.radar-sweep { animation: radar-sweep 2.6s linear infinite; }
+.radar-sweep { animation: radar-sweep 2.4s linear infinite; }
 
-/* =============================================
-   SMOOTH MARQUEE TICKER
-   ============================================= */
+/* ═══════════════════════════════════════════════════
+   SONAR RING — expanding circles on threat map
+   ═══════════════════════════════════════════════════ */
+@keyframes sonar-ring {
+  0%   { transform: scale(1);   opacity: 0.7; }
+  100% { transform: scale(3.5); opacity: 0;   }
+}
+.sonar-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(239, 68, 68, 0.6);
+  animation: sonar-ring 2.5s ease-out infinite;
+}
+.sonar-ring:nth-child(2) { animation-delay: 0.8s;  }
+.sonar-ring:nth-child(3) { animation-delay: 1.6s;  }
+
+/* ═══════════════════════════════════════════════════
+   MARQUEE TICKER
+   ═══════════════════════════════════════════════════ */
 @keyframes marquee {
   0%   { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -77,109 +132,167 @@ body {
 .animate-marquee {
   display: inline-flex;
   white-space: nowrap;
-  animation: marquee 36s linear infinite;
+  animation: marquee 34s linear infinite;
 }
 .animate-marquee:hover { animation-play-state: paused; }
 
-/* =============================================
-   SCAN LINE — subtle single sweep effect on cards
-   ============================================= */
+/* ═══════════════════════════════════════════════════
+   SCAN LINE — card entry sweep
+   ═══════════════════════════════════════════════════ */
 @keyframes scan-line {
-  0%   { top: -4%; opacity: 0; }
-  10%  { opacity: 0.3; }
-  90%  { opacity: 0.3; }
-  100% { top: 104%; opacity: 0; }
+  0%   { top: -4%;  opacity: 0;   }
+  10%  { opacity: 0.5; }
+  90%  { opacity: 0.5; }
+  100% { top: 104%; opacity: 0;   }
 }
 .scan-once {
-  position: absolute;
-  left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.4), transparent);
+  position: absolute; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(6,182,212,0.6), rgba(99,102,241,0.4), transparent);
   pointer-events: none;
-  animation: scan-line 2.4s ease-in-out 0.3s 1 forwards;
+  animation: scan-line 2s ease-in-out 0.2s 1 forwards;
+  z-index: 2;
 }
 
-/* =============================================
-   PULSE RING — danger badge ping
-   ============================================= */
-@keyframes ping-slow {
-  0%   { transform: scale(1); opacity: 0.8; }
-  70%  { transform: scale(1.9); opacity: 0;   }
-  100% { transform: scale(1.9); opacity: 0;   }
+/* Repeating scan for dashboard panels */
+@keyframes scan-loop {
+  0%   { top: -2%;  opacity: 0;   }
+  5%   { opacity: 0.35; }
+  95%  { opacity: 0.35; }
+  100% { top: 102%; opacity: 0;   }
 }
-.ping-slow { animation: ping-slow 2s ease-out infinite; }
-
-/* =============================================
-   FADE-IN — section entrance
-   ============================================= */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0);    }
+.scan-loop {
+  position: absolute; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(6,182,212,0.4), transparent);
+  pointer-events: none;
+  animation: scan-loop 5s linear infinite;
+  z-index: 2;
 }
-.animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
 
-/* =============================================
-   DATA STREAM — flowing background particles
-   ============================================= */
+/* ═══════════════════════════════════════════════════
+   GLITCH TEXT — header accent
+   ═══════════════════════════════════════════════════ */
+@keyframes glitch-1 {
+  0%,95%,100% { clip-path: none; transform: none; opacity: 1; }
+  96%  { clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%); transform: translateX(-3px); opacity: 0.8; }
+  97%  { clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%); transform: translateX( 3px); opacity: 0.8; }
+  98%  { clip-path: polygon(0 5%,  100% 5%,  100% 15%, 0 15%); transform: translateX(-2px); opacity: 0.9; }
+}
+.glitch-text { animation: glitch-1 8s steps(1) infinite; }
+
+/* ═══════════════════════════════════════════════════
+   TYPING CURSOR
+   ═══════════════════════════════════════════════════ */
+@keyframes blink-cursor {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+.cursor-blink::after {
+  content: "█";
+  color: #06b6d4;
+  font-size: 0.7em;
+  animation: blink-cursor 1s step-end infinite;
+  margin-left: 2px;
+}
+
+/* ═══════════════════════════════════════════════════
+   NEON BORDER PULSE — active input / selected card
+   ═══════════════════════════════════════════════════ */
+@keyframes neon-pulse {
+  0%,100% { box-shadow: 0 0 0px rgba(6,182,212,0);    border-color: rgba(6,182,212,0.15); }
+  50%      { box-shadow: 0 0 20px rgba(6,182,212,0.2); border-color: rgba(6,182,212,0.4);  }
+}
+.neon-border { animation: neon-pulse 3s ease-in-out infinite; }
+
+/* ═══════════════════════════════════════════════════
+   DATA STREAM PARTICLES — floating code bits
+   ═══════════════════════════════════════════════════ */
 @keyframes data-stream {
-  0%   { opacity: 0; transform: translateY(-10px); }
-  20%  { opacity: 0.6; }
-  80%  { opacity: 0.6; }
-  100% { opacity: 0;   transform: translateY(60px); }
+  0%   { opacity: 0; transform: translateY(-8px)  scale(0.8); }
+  15%  { opacity: 0.55; }
+  85%  { opacity: 0.55; }
+  100% { opacity: 0;   transform: translateY(70px) scale(0.8); }
 }
 .data-particle {
   position: absolute;
   font-family: monospace;
-  font-size: 9px;
-  color: rgba(6, 182, 212, 0.25);
+  font-size: 8px;
+  color: rgba(6, 182, 212, 0.22);
   pointer-events: none;
-  animation: data-stream 4s ease-in-out infinite;
+  user-select: none;
+  animation: data-stream linear infinite;
 }
 
-/* =============================================
-   GLASS SURFACES — no harsh lines, soft edges
-   ============================================= */
+/* ═══════════════════════════════════════════════════
+   PING SLOW — dual-ring alert pulse
+   ═══════════════════════════════════════════════════ */
+@keyframes ping-slow {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  70%  { transform: scale(2.2); opacity: 0;   }
+  100% { transform: scale(2.2); opacity: 0;   }
+}
+.ping-slow { animation: ping-slow 2.2s ease-out infinite; }
+
+/* ═══════════════════════════════════════════════════
+   FADE-IN SLIDE-UP — section entrance
+   ═══════════════════════════════════════════════════ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.animate-fadeIn { animation: fadeIn 0.45s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+/* ═══════════════════════════════════════════════════
+   PROGRESS BAR SHIMMER — risk score bar
+   ═══════════════════════════════════════════════════ */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.shimmer-bar {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* ═══════════════════════════════════════════════════
+   GLASS SURFACES — cinematic depth
+   ═══════════════════════════════════════════════════ */
 .glass-surface {
-  background: rgba(10, 14, 28, 0.72);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.055);
-  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.04);
+  background: rgba(8, 12, 24, 0.75);
+  backdrop-filter: blur(28px) saturate(1.2);
+  -webkit-backdrop-filter: blur(28px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow:
+    0 4px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.045),
+    inset 0 -1px 0 rgba(0,0,0,0.3);
 }
-
 .glass-surface-red {
-  background: rgba(40, 8, 15, 0.6);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(239, 68, 68, 0.22);
-  box-shadow: 0 8px 48px rgba(239, 68, 68, 0.1), inset 0 1px 0 rgba(255,100,100,0.05);
+  background: rgba(35, 6, 12, 0.72);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  box-shadow:
+    0 8px 48px rgba(239,68,68,0.12),
+    inset 0 1px 0 rgba(255,80,80,0.06);
 }
-
 .glass-surface-green {
-  background: rgba(4, 30, 22, 0.6);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(16, 185, 129, 0.22);
-  box-shadow: 0 8px 48px rgba(16, 185, 129, 0.08), inset 0 1px 0 rgba(16,185,129,0.06);
+  background: rgba(3, 25, 18, 0.72);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  box-shadow:
+    0 8px 48px rgba(16,185,129,0.09),
+    inset 0 1px 0 rgba(16,185,129,0.07);
 }
 
-/* =============================================
-   HOVER GLOW on interactive cards
-   ============================================= */
-.card-hover {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.card-hover:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 48px rgba(6, 182, 212, 0.12);
-}
-
-/* =============================================
-   CUSTOM SCROLLBAR — minimal
-   ============================================= */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+/* ═══════════════════════════════════════════════════
+   CUSTOM SCROLLBAR
+   ═══════════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(6, 182, 212, 0.15);
   border-radius: 9999px;
 }
-::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.35); }
+::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.4); }

@@ -301,21 +301,36 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#04060c] text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-200 flex flex-col justify-between relative overflow-hidden">
-      {/* ── Motion Graphics: Floating Aurora Orbs ── */}
-      <div className="absolute top-[-8%] left-[12%] w-[600px] h-[600px] bg-cyan-500/8 rounded-full blur-[160px] pointer-events-none animate-float-1" />
-      <div className="absolute top-[20%] right-[8%] w-[520px] h-[520px] bg-indigo-500/8 rounded-full blur-[170px] pointer-events-none animate-float-2" />
-      <div className="absolute bottom-[5%] left-[25%] w-[480px] h-[480px] bg-rose-500/7 rounded-full blur-[180px] pointer-events-none animate-float-3" />
-      <div className="absolute top-[55%] left-[5%] w-[320px] h-[320px] bg-violet-600/6 rounded-full blur-[130px] pointer-events-none animate-float-2" />
-      {/* Floating data particles */}
-      {["01", "10", "FF", "0x", ">>", "//"].map((char, i) => (
+      {/* ══ FUTURISTIC MOTION LAYER ══ */}
+
+      {/* Aurora Orbs — multi-colour ambient glow */}
+      <div className="absolute top-[-10%] left-[10%]  w-[650px] h-[650px] bg-cyan-500/[0.07]   rounded-full blur-[170px] pointer-events-none animate-float-1" />
+      <div className="absolute top-[18%]  right-[6%]  w-[560px] h-[560px] bg-indigo-500/[0.07] rounded-full blur-[180px] pointer-events-none animate-float-2" />
+      <div className="absolute bottom-[2%] left-[22%] w-[520px] h-[520px] bg-rose-500/[0.06]   rounded-full blur-[190px] pointer-events-none animate-float-3" />
+      <div className="absolute top-[50%]  left-[2%]   w-[350px] h-[350px] bg-violet-600/[0.06] rounded-full blur-[140px] pointer-events-none animate-float-4" />
+      <div className="absolute top-[35%] right-[30%]  w-[280px] h-[280px] bg-teal-400/[0.05]   rounded-full blur-[120px] pointer-events-none animate-float-1" style={{animationDelay:"4s"}} />
+
+      {/* Cyber grid flash lines */}
+      <div className="cyber-line" />
+      <div className="cyber-line" />
+      <div className="cyber-line" />
+      <div className="cyber-line" />
+
+      {/* Floating binary / hex data particles */}
+      {["01","10","FF","0x",">>","//","7E","A4","∇","⊕","⊗","BN"].map((char, i) => (
         <span
           key={i}
           className="data-particle select-none"
           style={{
-            left: `${10 + i * 15}%`,
-            top: `${20 + (i % 3) * 25}%`,
-            animationDelay: `${i * 0.8}s`,
-            animationDuration: `${4 + i * 0.6}s`,
+            left:  `${5 + i * 8}%`,
+            top:   `${15 + (i % 4) * 20}%`,
+            animationDelay:    `${i * 0.6}s`,
+            animationDuration: `${3.5 + i * 0.5}s`,
+            color: i % 3 === 0
+              ? "rgba(6,182,212,0.2)"
+              : i % 3 === 1
+              ? "rgba(99,102,241,0.18)"
+              : "rgba(244,63,94,0.15)",
           }}
         >
           {char}
@@ -355,12 +370,12 @@ export default function Home() {
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-bold text-base sm:text-lg tracking-wider text-white">AEGIS OMEGA</span>
+                <span className="font-bold text-base sm:text-lg tracking-wider text-white glitch-text">AEGIS OMEGA</span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950/90 text-cyan-300 border border-cyan-700/40 uppercase">ACTIVE DEFENSE v3.2</span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-red-950/90 text-red-300 border border-red-700/40 uppercase">PS01 SCAMSHIELD</span>
               </div>
               <p className="text-[11px] text-slate-500 font-mono">
-                Tagline: <strong className="text-cyan-300">Intelligence Before Impact.</strong>
+                Tagline: <strong className="text-cyan-300 cursor-blink">Intelligence Before Impact.</strong>
               </p>
             </div>
           </div>
@@ -500,7 +515,7 @@ export default function Home() {
               value={inputPayload}
               onChange={(e) => setInputPayload(e.target.value)}
               placeholder="Paste suspicious SMS, WhatsApp message, Telegram job invite, or phishing link here (supports English, Hindi, and Assamese অসমীয়া)..."
-              className="w-full bg-[#020509]/90 rounded-2xl p-4 font-mono text-xs sm:text-sm text-cyan-200 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-cyan-500/40 resize-y border border-white/4 transition-all duration-200"
+              className="w-full bg-[#020509]/90 rounded-2xl p-4 font-mono text-xs sm:text-sm text-cyan-200 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-cyan-500/40 resize-y border border-white/4 transition-all duration-200 neon-border"
             />
           </div>
 
@@ -544,12 +559,14 @@ export default function Home() {
           <div className="space-y-6 animate-fadeIn">
             {/* Big Verdict Banner with Animated Circular Radar Dial */}
             <div
-              className={`p-6 sm:p-8 rounded-3xl transition-all duration-500 shadow-2xl ${
+              className={`p-6 sm:p-8 rounded-3xl transition-all duration-500 shadow-2xl relative overflow-hidden ${
                 investigation.riskIntelligence.finalScore >= 50
                   ? "glass-surface-red shadow-rose-950/40"
                   : "glass-surface-green shadow-emerald-950/40"
               }`}
             >
+              {/* Repeating scan on verdict card */}
+              <div className="scan-loop" />
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div className="flex items-start gap-4">
                   <div
@@ -887,12 +904,29 @@ export default function Home() {
 
                       <div className="space-y-3">
                         {investigation.riskIntelligence.breakdown.map((factor, idx) => (
-                          <div key={idx} className="bg-[#030611]/80 p-3.5 rounded-2xl font-mono text-xs space-y-1 border border-white/5">
+                          <div key={idx} className="bg-[#030611]/80 p-3.5 rounded-2xl font-mono text-xs space-y-2 border border-white/5 relative overflow-hidden">
                             <div className="flex justify-between items-center">
                               <span className="text-white font-bold">{factor.factor}</span>
                               <span className="text-cyan-400 font-bold">
                                 +{factor.contribution} pts
                               </span>
+                            </div>
+                            {/* Shimmer progress bar */}
+                            <div className="h-1.5 w-full bg-slate-800/80 rounded-full overflow-hidden">
+                              <div
+                                className="h-full rounded-full relative overflow-hidden"
+                                style={{
+                                  width: `${Math.min(100, (factor.contribution / 35) * 100)}%`,
+                                  background: factor.contribution > 20
+                                    ? "linear-gradient(90deg, #ef4444, #f97316)"
+                                    : factor.contribution > 10
+                                    ? "linear-gradient(90deg, #f59e0b, #eab308)"
+                                    : "linear-gradient(90deg, #06b6d4, #6366f1)",
+                                  transition: "width 1s cubic-bezier(0.16,1,0.3,1)",
+                                }}
+                              >
+                                <div className="shimmer-bar absolute inset-0" />
+                              </div>
                             </div>
                             <p className="text-[11px] text-slate-400 leading-tight">
                               {factor.reasoning}
@@ -1080,19 +1114,47 @@ export default function Home() {
 
                 <div className="glass-surface p-6 rounded-3xl space-y-4">
                 <div className="relative w-full h-72 bg-[#020509]/90 rounded-2xl overflow-hidden flex items-center justify-center">
-                    <svg className="w-full h-full opacity-20" viewBox="0 0 100 60">
-                      <path
-                        d="M10,20 Q25,10 35,22 Q40,30 30,45 Q20,50 15,35 Z M45,15 Q65,12 85,20 Q90,35 75,45 Q60,48 50,35 Z M50,30 Q60,25 70,35 Q65,55 50,45 Z"
-                        fill="#334155"
-                      />
+                    {/* Sonar grid */}
+                    <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid slice">
+                      <defs>
+                        <radialGradient id="sonarGrad" cx="50%" cy="50%">
+                          <stop offset="0%"   stopColor="#06b6d4" stopOpacity="0.3" />
+                          <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
+                        </radialGradient>
+                      </defs>
+                      {/* Concentric circles */}
+                      {[40,80,120,160].map(r => (
+                        <circle key={r} cx="200" cy="140" r={r} fill="none" stroke="rgba(6,182,212,0.15)" strokeWidth="0.5"/>
+                      ))}
+                      {/* Cross-hairs */}
+                      <line x1="200" y1="0" x2="200" y2="280" stroke="rgba(6,182,212,0.08)" strokeWidth="0.5"/>
+                      <line x1="0"   y1="140" x2="400" y2="140" stroke="rgba(6,182,212,0.08)" strokeWidth="0.5"/>
+                      {/* World silhouette */}
+                      <path d="M10,20 Q25,10 35,22 Q40,30 30,45 Q20,50 15,35 Z M45,15 Q65,12 85,20 Q90,35 75,45 Q60,48 50,35 Z M50,30 Q60,25 70,35 Q65,55 50,45 Z" fill="#1e293b" transform="scale(3.5) translate(10,8)"/>
                     </svg>
+                    {/* Radar sweep animation */}
+                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 280" style={{transformOrigin:"200px 140px"}}>
+                      <defs>
+                        <linearGradient id="sweepGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%"   stopColor="#06b6d4" stopOpacity="0" />
+                          <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.25" />
+                        </linearGradient>
+                      </defs>
+                      <g style={{transformOrigin:"200px 140px", animation:"radar-sweep 4s linear infinite"}}>
+                        <path d="M200,140 L200,0 A140,140 0 0,1 310,195 Z" fill="url(#sweepGrad)" opacity="0.4"/>
+                      </g>
+                    </svg>
+                    {/* Threat pin with sonar rings */}
                     <div className="absolute z-10 flex flex-col items-center">
-                      <span className="w-20 h-20 rounded-full bg-red-500/15 absolute animate-ping" style={{animationDuration:"2s"}} />
-                      <span className="w-10 h-10 rounded-full bg-red-500/25 animate-pulse absolute" />
-                      <span className="w-5 h-5 rounded-full bg-red-500 border-2 border-white shadow-xl flex items-center justify-center relative">
-                        <Crosshair className="w-3 h-3 text-black" />
-                      </span>
-                      <span className="mt-3 text-[10px] font-mono font-bold bg-black/90 text-red-300 px-2.5 py-0.5 rounded-full shadow-md relative">
+                      <div className="relative w-16 h-16 flex items-center justify-center">
+                        <span className="sonar-ring w-16 h-16 absolute" />
+                        <span className="sonar-ring w-16 h-16 absolute" />
+                        <span className="sonar-ring w-16 h-16 absolute" />
+                        <span className="w-5 h-5 rounded-full bg-red-500 border-2 border-white shadow-xl shadow-red-500/50 flex items-center justify-center relative z-10">
+                          <Crosshair className="w-3 h-3 text-black" />
+                        </span>
+                      </div>
+                      <span className="mt-1 text-[10px] font-mono font-bold bg-black/90 text-red-300 px-2.5 py-0.5 rounded-full shadow-md border border-red-500/30">
                         {investigation.threatIntelligence.infrastructureLocation.city}, {investigation.threatIntelligence.infrastructureLocation.country}
                       </span>
                     </div>
