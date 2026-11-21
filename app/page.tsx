@@ -125,14 +125,10 @@ export default function Home() {
   const [communityReports, setCommunityReports] = useState<any[]>([]);
   const [communityTrends, setCommunityTrends] = useState<any[]>([]);
 
-  // Notification / copy states
-  const [copiedNotice, setCopiedNotice] = useState<string | null>(null);
-
   useEffect(() => {
     runInvestigation(QUICK_PRESETS[0].content);
     fetchCommunityData();
 
-    // Clock ticker
     const timer = setInterval(() => {
       setCurrentTime(new Date().toLocaleTimeString("en-GB", { hour12: false }));
     }, 1000);
@@ -147,7 +143,7 @@ export default function Home() {
       setCommunityReports(data.reports || []);
       setCommunityTrends(data.aggregateTrends || []);
     } catch (err) {
-      console.error("Community feed load error:", err);
+      console.error("Community feed error:", err);
     }
   };
 
@@ -304,102 +300,121 @@ export default function Home() {
       : TRAINING_SCENARIOS.filter((s) => s.language === trainingLanguage);
 
   return (
-    <div className="min-h-screen bg-[#05070e] text-slate-200 font-sans selection:bg-cyan-500/30 selection:text-cyan-200 flex flex-col justify-between cyber-grid">
-      {/* LIVE SCROLLING THREAT INTELLIGENCE TICKER */}
-      <div className="bg-[#03050a] border-b border-cyan-950/60 py-1 overflow-hidden font-mono text-[11px] text-cyan-300 flex items-center">
-        <div className="px-3 bg-red-600 text-black font-extrabold uppercase shrink-0 flex items-center gap-1.5 z-10 shadow-md">
-          <Activity className="w-3 h-3 animate-pulse" />
-          <span>LIVE INTEL FEED</span>
+    <div className="min-h-screen bg-[#04060c] text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-200 flex flex-col justify-between relative overflow-hidden">
+      {/* ── Motion Graphics: Floating Aurora Orbs ── */}
+      <div className="absolute top-[-8%] left-[12%] w-[600px] h-[600px] bg-cyan-500/8 rounded-full blur-[160px] pointer-events-none animate-float-1" />
+      <div className="absolute top-[20%] right-[8%] w-[520px] h-[520px] bg-indigo-500/8 rounded-full blur-[170px] pointer-events-none animate-float-2" />
+      <div className="absolute bottom-[5%] left-[25%] w-[480px] h-[480px] bg-rose-500/7 rounded-full blur-[180px] pointer-events-none animate-float-3" />
+      <div className="absolute top-[55%] left-[5%] w-[320px] h-[320px] bg-violet-600/6 rounded-full blur-[130px] pointer-events-none animate-float-2" />
+      {/* Floating data particles */}
+      {["01", "10", "FF", "0x", ">>", "//"].map((char, i) => (
+        <span
+          key={i}
+          className="data-particle select-none"
+          style={{
+            left: `${10 + i * 15}%`,
+            top: `${20 + (i % 3) * 25}%`,
+            animationDelay: `${i * 0.8}s`,
+            animationDuration: `${4 + i * 0.6}s`,
+          }}
+        >
+          {char}
+        </span>
+      ))}
+
+      {/* ── Live Threat Stream Ticker ── */}
+      <div className="bg-[#040710]/90 backdrop-blur-xl py-1.5 overflow-hidden text-xs text-slate-300 flex items-center relative z-20">
+        <div className="px-3 py-0.5 ml-2 bg-gradient-to-r from-red-600 to-rose-600 text-black font-extrabold text-[10px] uppercase rounded-full shrink-0 flex items-center gap-1.5 shadow-lg shadow-red-600/30">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+          </span>
+          <span>LIVE INTEL</span>
         </div>
-        <div className="overflow-hidden w-full whitespace-nowrap">
-          <div className="animate-marquee space-x-8 text-slate-300">
-            <span>🚨 [12:24:19] APDCL Power Cutoff Smishing intercepted in Guwahati (9:30 PM cutoff threat)</span>
-            <span>🛡️ [12:23:55] Malicious SBI NetBanking clone (.xyz) blocked across 14 ASN nodes</span>
-            <span>⚠️ [12:22:40] India Post ₹15 address smishing cluster quarantined (PrivateLayer Proxy)</span>
-            <span>🟢 [12:21:12] Amazon genuine OTP verification validated (Zero False Positive)</span>
-            <span>🚨 [12:19:30] Transnational Task Pig-Butchering Telegram compound flagged (Phnom Penh)</span>
-            <span>📡 [TELEMETRY] 1,482 rogue nodes actively tracked across Indian telecommunications gateways</span>
-            <span>🚨 [12:24:19] APDCL Power Cutoff Smishing intercepted in Guwahati (9:30 PM cutoff threat)</span>
-            <span>🛡️ [12:23:55] Malicious SBI NetBanking clone (.xyz) blocked across 14 ASN nodes</span>
+        <div className="overflow-hidden w-full whitespace-nowrap pl-4">
+          <div className="animate-marquee space-x-12 text-[11px] font-mono text-slate-400">
+            <span className="text-red-400">🚨 APDCL Power Cutoff Smishing intercepted in Guwahati (9:30 PM cutoff threat)</span>
+            <span className="text-cyan-400">🛡️ Malicious SBI NetBanking clone (.xyz) neutralized across 14 ASN nodes</span>
+            <span className="text-amber-400">⚠️ India Post ₹15 address smishing cluster quarantined (PrivateLayer Proxy)</span>
+            <span className="text-emerald-400">🟢 Amazon genuine OTP verification validated (Zero False Positive)</span>
+            <span className="text-red-400">🚨 Transnational Task Pig-Butchering Telegram compound flagged (Phnom Penh)</span>
+            <span className="text-cyan-400">📡 1,482 rogue nodes actively tracked across Indian telecommunications gateways</span>
+            <span className="text-red-400">🚨 APDCL Power Cutoff Smishing intercepted in Guwahati (9:30 PM cutoff threat)</span>
           </div>
         </div>
       </div>
 
-      {/* Top Header Bar */}
-      <header className="border-b border-slate-800/80 bg-[#080c16]/95 backdrop-blur sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      {/* ── Top Header ── */}
+      <header className="bg-[#060b18]/80 backdrop-blur-2xl sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 via-indigo-600 to-rose-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 overflow-hidden">
-              <ShieldAlert className="w-6 h-6 text-black stroke-[2.5]" />
-              {/* Spinning sonar effect */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-400/20 to-transparent radar-sweep pointer-events-none"></div>
+            {/* Animated logo with radar sweep */}
+            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-rose-500 flex items-center justify-center shadow-lg shadow-cyan-500/25 overflow-hidden">
+              <ShieldAlert className="w-5 h-5 text-black stroke-[2.5] relative z-10" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent radar-sweep pointer-events-none" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-mono font-black text-lg tracking-wider text-white">
-                  AEGIS OMEGA
-                </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800/60 uppercase">
-                  ACTIVE DEFENSE v3.0
-                </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-red-950 text-red-400 border border-red-800/60 uppercase">
-                  PS01 SCAMSHIELD
-                </span>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-bold text-base sm:text-lg tracking-wider text-white">AEGIS OMEGA</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950/90 text-cyan-300 border border-cyan-700/40 uppercase">ACTIVE DEFENSE v3.2</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-red-950/90 text-red-300 border border-red-700/40 uppercase">PS01 SCAMSHIELD</span>
               </div>
-              <p className="text-[10px] text-slate-400 font-mono">
+              <p className="text-[11px] text-slate-500 font-mono">
                 Tagline: <strong className="text-cyan-300">Intelligence Before Impact.</strong>
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Live Clock & Pulse */}
-            <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px] text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              <span className="text-white font-bold">{currentTime || "12:25:00"}</span>
-              <span className="text-slate-600">|</span>
-              <span className="text-cyan-400">64ms RTT</span>
+            {/* Neural Equalizer Waveform */}
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/50">
+              <div className="flex items-end gap-0.5 h-6">
+                {["bg-cyan-400","bg-cyan-400","bg-cyan-500","bg-indigo-400","bg-indigo-400","bg-rose-400","bg-rose-400"].map((c,i) => (
+                  <span key={i} className={`w-1 ${c} rounded-full wave-bar`} />
+                ))}
+              </div>
+              <span className="text-[10px] font-mono text-cyan-300 uppercase tracking-wider pl-1">NEURAL RADAR</span>
             </div>
 
-            {/* Simple vs Advanced View Toggle */}
-            <div className="flex items-center bg-[#070b14] p-1 rounded-xl border border-slate-800 text-xs font-mono">
+            {/* View Mode Toggle */}
+            <div className="flex items-center bg-[#0a0f1e]/90 p-1 rounded-xl border border-white/5 text-xs font-mono">
               <button
                 onClick={() => setViewMode("simple")}
-                className={`px-3 py-1 rounded-lg transition flex items-center gap-1.5 ${
+                className={`px-3 py-1 rounded-lg transition-all duration-300 flex items-center gap-1.5 ${
                   viewMode === "simple"
-                    ? "bg-cyan-600 text-black font-bold shadow-md shadow-cyan-600/30"
+                    ? "bg-gradient-to-r from-cyan-500 to-indigo-600 text-white font-bold shadow-lg shadow-cyan-500/25"
                     : "text-slate-400 hover:text-white"
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Simple View</span>
+                <span>Simple</span>
               </button>
               <button
                 onClick={() => setViewMode("advanced")}
-                className={`px-3 py-1 rounded-lg transition flex items-center gap-1.5 ${
+                className={`px-3 py-1 rounded-lg transition-all duration-300 flex items-center gap-1.5 ${
                   viewMode === "advanced"
-                    ? "bg-cyan-600 text-black font-bold shadow-md shadow-cyan-600/30"
+                    ? "bg-gradient-to-r from-cyan-500 to-indigo-600 text-white font-bold shadow-lg shadow-cyan-500/25"
                     : "text-slate-400 hover:text-white"
                 }`}
               >
                 <Cpu className="w-3.5 h-3.5" />
-                <span>Advanced SOC</span>
+                <span>SOC</span>
               </button>
             </div>
 
             <a
               href="tel:1930"
-              className="px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-black font-mono text-xs font-black uppercase transition shadow-lg shadow-red-600/30 flex items-center gap-1"
+              className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-mono text-xs font-bold uppercase transition shadow-lg shadow-red-600/30 flex items-center gap-1.5 active:scale-95"
             >
               <PhoneCall className="w-3.5 h-3.5" />
-              <span>HELPLINE: 1930</span>
+              <span>1930</span>
             </a>
           </div>
         </div>
 
-        {/* 12-Section Navigation Bar (Visible in Advanced Mode) */}
+        {/* 12-Tab Nav (Advanced mode only) */}
         {viewMode === "advanced" && (
-          <div className="border-t border-slate-800/60 bg-[#070b14] overflow-x-auto">
+          <div className="bg-[#040810]/80 backdrop-blur-md overflow-x-auto">
             <div className="max-w-7xl mx-auto px-4 flex space-x-1 py-1.5">
               {navItems.map((item) => {
                 const Icon = item.icon;
@@ -408,13 +423,13 @@ export default function Home() {
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id as any)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-mono text-xs whitespace-nowrap transition ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-mono text-xs whitespace-nowrap transition-all duration-200 ${
                       isActive
-                        ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-sm shadow-cyan-500/20"
-                        : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                        ? "bg-cyan-500/15 text-cyan-300 border border-cyan-500/35 shadow-sm shadow-cyan-500/15"
+                        : "text-slate-500 hover:text-slate-200 hover:bg-slate-800/40"
                     }`}
                   >
-                    <Icon className={`w-3.5 h-3.5 ${isActive ? "text-cyan-400" : "text-slate-500"}`} />
+                    <Icon className={`w-3.5 h-3.5 ${isActive ? "text-cyan-400" : "text-slate-600"}`} />
                     <span>{item.label}</span>
                   </button>
                 );
@@ -425,28 +440,25 @@ export default function Home() {
       </header>
 
       {/* Main Content Body */}
-      <main className="max-w-7xl mx-auto px-4 py-6 w-full flex-1">
-        {/* Universal Payload Interception Workbench */}
-        <section className="bg-[#0b101d] rounded-2xl border border-slate-800/90 p-5 shadow-2xl mb-8 relative overflow-hidden glow-cyan">
-          {/* Laser Scanline Beam when investigating */}
-          {isInvestigating && (
-            <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent laser-beam z-20 pointer-events-none"></div>
-          )}
-
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-3 border-b border-slate-800 gap-2">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
-              <h2 className="font-bold text-sm sm:text-base text-white font-mono flex items-center gap-2">
-                <span>INTERCEPTION WORKBENCH</span>
-                <span className="text-[10px] text-slate-500 font-normal">[READY]</span>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-1 relative z-10">
+        {/* ── Universal Input Workbench ── */}
+        <section className="glass-surface rounded-3xl p-6 shadow-2xl mb-8 relative overflow-hidden transition-all duration-300 hover:shadow-cyan-500/8">
+          {/* Scan line motion effect */}
+          <div className="scan-once" />
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-3 w-3">
+                <span className="ping-slow absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-400" />
+              </span>
+              <h2 className="font-bold text-base text-white tracking-wide">
+                Paste or Type Any Suspicious Message Below
               </h2>
             </div>
-
-            {/* Clear and Paste Helpers */}
             <div className="flex items-center gap-2">
               <button
                 onClick={handlePasteClipboard}
-                className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-cyan-300 font-mono flex items-center gap-1 border border-slate-700 transition active:scale-95"
+                className="px-3 py-1.5 rounded-xl bg-slate-800/70 hover:bg-cyan-950/60 text-xs text-cyan-300 font-mono flex items-center gap-1.5 transition-all duration-200 active:scale-95 border border-white/5 hover:border-cyan-500/30"
                 title="Paste from clipboard"
               >
                 <ClipboardPaste className="w-3.5 h-3.5" />
@@ -455,7 +467,7 @@ export default function Home() {
               {inputPayload && (
                 <button
                   onClick={handleClearText}
-                  className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-red-950 text-xs text-slate-400 hover:text-red-300 font-mono flex items-center gap-1 border border-slate-700 transition active:scale-95"
+                  className="px-3 py-1.5 rounded-xl bg-slate-800/70 hover:bg-red-950/60 text-xs text-slate-400 hover:text-red-300 font-mono flex items-center gap-1.5 transition-all duration-200 active:scale-95 border border-white/5"
                   title="Clear text"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -466,43 +478,38 @@ export default function Home() {
           </div>
 
           {/* Quick Presets */}
-          <div className="mb-3">
-            <span className="text-[11px] font-mono text-slate-400 block mb-1.5">
-              Click an example to test instantly:
-            </span>
+          <div className="mb-4">
+            <span className="text-[11px] font-mono text-slate-500 block mb-2">Or click an example to test instantly:</span>
             <div className="flex flex-wrap gap-2">
               {QUICK_PRESETS.map((preset) => (
                 <button
                   key={preset.id}
-                  onClick={() => {
-                    setInputPayload(preset.content);
-                    runInvestigation(preset.content);
-                  }}
-                  className="px-2.5 py-1 rounded-lg bg-[#0f172a] hover:bg-slate-800 border border-slate-700/60 text-xs font-mono text-slate-300 hover:text-white transition active:scale-95 flex items-center gap-1.5"
+                  onClick={() => { setInputPayload(preset.content); runInvestigation(preset.content); }}
+                  className="px-3 py-1.5 rounded-xl bg-[#0d1526]/80 hover:bg-cyan-950/40 border border-white/5 hover:border-cyan-500/35 text-xs font-mono text-slate-400 hover:text-white transition-all duration-200 active:scale-95"
                 >
-                  <span>{preset.label}</span>
+                  {preset.label}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Text Area */}
-          <div className="relative mb-3">
+          {/* Textarea */}
+          <div className="relative mb-4">
             <textarea
               rows={4}
               value={inputPayload}
               onChange={(e) => setInputPayload(e.target.value)}
               placeholder="Paste suspicious SMS, WhatsApp message, Telegram job invite, or phishing link here (supports English, Hindi, and Assamese অসমীয়া)..."
-              className="w-full bg-[#070b14] border border-slate-800 rounded-xl p-3.5 font-mono text-xs sm:text-sm text-cyan-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500/80 focus:ring-1 focus:ring-cyan-500/50 resize-y"
+              className="w-full bg-[#020509]/90 rounded-2xl p-4 font-mono text-xs sm:text-sm text-cyan-200 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-cyan-500/40 resize-y border border-white/4 transition-all duration-200"
             />
           </div>
 
           {/* Action Row */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="text-[11px] font-mono text-slate-400 flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-xs font-mono text-slate-400 flex items-center gap-3">
               {investigation && (
                 <>
-                  <span className="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
+                  <span className="px-2.5 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-800/40">
                     Language: {investigation.language.languageName}
                   </span>
                   <span className="text-slate-500">Characters: {inputPayload.length}</span>
@@ -513,12 +520,12 @@ export default function Home() {
             <button
               onClick={() => runInvestigation()}
               disabled={isInvestigating || !inputPayload.trim()}
-              className="w-full sm:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-600 via-indigo-600 to-rose-600 hover:from-cyan-500 hover:to-rose-500 text-white font-mono font-black text-sm uppercase tracking-wider transition shadow-lg shadow-cyan-600/30 flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95"
+              className="w-full sm:w-auto px-8 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-rose-600 hover:from-cyan-400 hover:to-rose-500 text-white font-mono font-bold text-sm tracking-wider uppercase transition-all duration-300 shadow-xl shadow-cyan-600/25 flex items-center justify-center gap-2.5 disabled:opacity-50 active:scale-95"
             >
               {isInvestigating ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin text-cyan-300" />
-                  <span>SWEEPING VECTORS...</span>
+                  <span>ANALYZING INTELLIGENCE...</span>
                 </>
               ) : (
                 <>
@@ -531,28 +538,27 @@ export default function Home() {
         </section>
 
         {/* ============================================================== */}
-        {/* SIMPLE VIEW (ULTRA-CLEAR, FOR EVERYONE)                        */}
+        {/* SIMPLE VIEW (CLEAN MOTION GRAPHICS, ZERO CLUTTER)              */}
         {/* ============================================================== */}
         {viewMode === "simple" && investigation && (
           <div className="space-y-6 animate-fadeIn">
-            {/* Big Unmistakable Verdict Banner with Animated Circular Radar Dial */}
+            {/* Big Verdict Banner with Animated Circular Radar Dial */}
             <div
-              className={`p-6 sm:p-8 rounded-2xl border ${
+              className={`p-6 sm:p-8 rounded-3xl transition-all duration-500 shadow-2xl ${
                 investigation.riskIntelligence.finalScore >= 50
-                  ? "bg-red-950/40 border-red-500 shadow-2xl glow-red"
-                  : "bg-emerald-950/40 border-emerald-500 shadow-2xl glow-cyan"
+                  ? "glass-surface-red shadow-rose-950/40"
+                  : "glass-surface-green shadow-emerald-950/40"
               }`}
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div className="flex items-start gap-4">
                   <div
-                    className={`relative w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 overflow-hidden ${
+                    className={`relative w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 overflow-hidden shadow-xl ${
                       investigation.riskIntelligence.finalScore >= 50
-                        ? "bg-red-600 text-black shadow-lg shadow-red-600/40"
-                        : "bg-emerald-500 text-black shadow-lg shadow-emerald-500/40"
+                        ? "bg-gradient-to-br from-red-600 to-rose-700 text-white shadow-red-600/30"
+                        : "bg-gradient-to-br from-emerald-500 to-teal-700 text-white shadow-emerald-500/30"
                     }`}
                   >
-                    {/* Sonar sweep inside badge */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent radar-sweep pointer-events-none"></div>
                     {investigation.riskIntelligence.finalScore >= 50 ? (
                       <AlertOctagon className="w-9 h-9 stroke-[2.5]" />
@@ -562,17 +568,17 @@ export default function Home() {
                   </div>
                   <div>
                     <span
-                      className={`text-xs font-mono font-black uppercase px-2.5 py-0.5 rounded-full ${
+                      className={`text-xs font-mono font-bold uppercase px-3 py-1 rounded-full ${
                         investigation.riskIntelligence.finalScore >= 50
-                          ? "bg-red-600 text-black"
-                          : "bg-emerald-500 text-black"
+                          ? "bg-red-500/20 text-red-300 border border-red-500/40"
+                          : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
                       }`}
                     >
                       {investigation.riskIntelligence.finalScore >= 50
                         ? "HIGH-RISK SCAM DETECTED"
                         : "VERIFIED SAFE / LOW RISK"}
                     </span>
-                    <h2 className="text-xl sm:text-2xl font-black text-white mt-1">
+                    <h2 className="text-xl sm:text-2xl font-black text-white mt-2">
                       {investigation.scamDna.fingerprint.primaryVector}
                     </h2>
                     <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
@@ -583,21 +589,19 @@ export default function Home() {
 
                 {/* Animated Circular Radar Dial */}
                 <div className="flex items-center gap-4 shrink-0">
-                  <div className="relative w-20 h-20 flex items-center justify-center">
-                    <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                      {/* Background circle */}
+                  <div className="relative w-22 h-22 flex items-center justify-center">
+                    <svg className="w-20 h-20 -rotate-90" viewBox="0 0 36 36">
                       <path
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                         fill="none"
-                        stroke="#1e293b"
-                        strokeWidth="3.5"
+                        stroke="rgba(255, 255, 255, 0.08)"
+                        strokeWidth="3.2"
                       />
-                      {/* Colored Progress Ring */}
                       <path
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                         fill="none"
                         stroke={investigation.riskIntelligence.finalScore >= 50 ? "#ef4444" : "#10b981"}
-                        strokeWidth="3.5"
+                        strokeWidth="3.2"
                         strokeDasharray={`${investigation.riskIntelligence.finalScore}, 100`}
                         strokeLinecap="round"
                         className="transition-all duration-1000 ease-out"
@@ -607,24 +611,23 @@ export default function Home() {
                       <span className={`text-xl font-mono font-black ${investigation.riskIntelligence.finalScore >= 50 ? "text-red-400" : "text-emerald-400"}`}>
                         {investigation.riskIntelligence.finalScore}%
                       </span>
-                      <span className="text-[8px] font-mono text-slate-400 uppercase font-bold">RISK</span>
+                      <span className="text-[9px] font-mono text-slate-400 uppercase font-bold">RISK</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* 3 Simple Action Cards */}
+            {/* 3 Simple Action Cards (Floating, rounded, no harsh lines) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Card 1: What is happening */}
-              <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-2 glow-cyan">
+              <div className="glass-surface p-6 rounded-3xl space-y-2.5 hover:-translate-y-1 transition-all duration-300">
                 <span className="text-xs font-bold text-cyan-400 flex items-center gap-1.5 uppercase font-mono">
                   <Info className="w-4 h-4 text-cyan-400" />
                   1. What is this message?
                 </span>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                   {investigation.trustVerification.claimedOrganization !== "None Claimed"
-                    ? `This message claims to be from ${investigation.trustVerification.claimedOrganization}, but it was sent from an unofficial channel.`
+                    ? `This message claims to be from ${investigation.trustVerification.claimedOrganization}, but it originates from an unauthorized unverified channel.`
                     : "This message uses unsolicited urgent language to pressure you into taking immediate action."}
                 </p>
                 <div className="text-[11px] text-slate-500 font-mono pt-1">
@@ -632,36 +635,34 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Card 2: What is the trap */}
-              <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-2 glow-amber">
+              <div className="glass-surface p-6 rounded-3xl space-y-2.5 hover:-translate-y-1 transition-all duration-300">
                 <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5 uppercase font-mono">
                   <Zap className="w-4 h-4 text-amber-400" />
                   2. What is the danger?
                 </span>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                   {investigation.futureAttackSimulation.stages[2]?.description ||
                     "The sender wants you to click a link, dial an unknown number, or send money."}
                 </p>
-                <div className="text-[11px] text-amber-400/90 font-mono pt-1">
-                  Goal: Steal your money or account details.
+                <div className="text-[11px] text-amber-400 font-mono pt-1">
+                  Goal: Steal your money or account credentials.
                 </div>
               </div>
 
-              {/* Card 3: What should you do right now */}
-              <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-2 glow-cyan">
+              <div className="glass-surface p-6 rounded-3xl space-y-2.5 hover:-translate-y-1 transition-all duration-300">
                 <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5 uppercase font-mono">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
                   3. What should you do?
                 </span>
-                <ul className="text-xs text-slate-300 space-y-1">
+                <ul className="text-xs sm:text-sm text-slate-300 space-y-1.5">
                   <li>• <strong>Do NOT</strong> click any links in the message.</li>
                   <li>• <strong>Do NOT</strong> call numbers in the message.</li>
                   <li>• <strong>Do NOT</strong> share any OTP or UPI PIN.</li>
                 </ul>
-                <div className="pt-1">
+                <div className="pt-2">
                   <a
                     href="tel:1930"
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-black font-mono text-xs font-bold shadow-lg shadow-red-600/30 active:scale-95"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-mono text-xs font-bold shadow-lg shadow-red-600/30 active:scale-95 transition-all"
                   >
                     <PhoneCall className="w-3.5 h-3.5" />
                     <span>Call Helpline: 1930</span>
@@ -671,16 +672,16 @@ export default function Home() {
             </div>
 
             {/* Quick Switch to Advanced Link */}
-            <div className="p-4 rounded-xl bg-[#0b101d] border border-slate-800 flex items-center justify-between text-xs font-mono">
+            <div className="p-5 rounded-2xl glass-surface flex items-center justify-between text-xs font-mono">
               <span className="text-slate-400">
-                Want to see the full 12-agent technical breakdown, node-link graph, and firewall patch?
+                Want to inspect all 12 multi-agent technical tabs, Scam DNA graph, and firewall patches?
               </span>
               <button
                 onClick={() => setViewMode("advanced")}
-                className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-black font-bold flex items-center gap-1 transition active:scale-95 shadow-md shadow-cyan-600/30"
+                className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-bold flex items-center gap-1.5 transition active:scale-95 shadow-md shadow-cyan-600/30"
               >
                 <span>Switch to Advanced SOC View</span>
-                <ChevronRight className="w-3.5 h-3.5" />
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -696,20 +697,20 @@ export default function Home() {
               <div className="space-y-6">
                 {/* ThreatCon Banner */}
                 <div
-                  className={`p-6 rounded-2xl border ${
+                  className={`p-6 sm:p-8 rounded-3xl ${
                     investigation.riskIntelligence.finalScore >= 60
-                      ? "bg-red-950/30 border-red-500/80 shadow-2xl shadow-red-900/30 glow-red"
-                      : "bg-emerald-950/30 border-emerald-500/80 shadow-2xl shadow-emerald-900/30 glow-cyan"
+                      ? "glass-surface-red shadow-2xl shadow-red-950/40"
+                      : "glass-surface-green shadow-2xl shadow-emerald-950/40"
                   }`}
                 >
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span
-                          className={`font-mono text-xs uppercase px-2.5 py-0.5 rounded-full font-black tracking-wider ${
+                          className={`font-mono text-xs uppercase px-3 py-1 rounded-full font-bold ${
                             investigation.riskIntelligence.finalScore >= 60
-                              ? "bg-red-600 text-black animate-pulse"
-                              : "bg-emerald-600 text-black"
+                              ? "bg-red-500/20 text-red-300 border border-red-500/40"
+                              : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
                           }`}
                         >
                           {investigation.riskIntelligence.riskLevel} THREAT
@@ -718,10 +719,10 @@ export default function Home() {
                           Primary Vector: {investigation.scamDna.fingerprint.primaryVector}
                         </span>
                       </div>
-                      <h2 className="text-xl font-mono font-bold text-white">
+                      <h2 className="text-xl font-bold text-white mt-1">
                         {investigation.scamDna.fingerprint.clusterCategory}
                       </h2>
-                      <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                      <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
                         {investigation.futureAttackSimulation.simulationSummary}
                       </p>
                     </div>
@@ -743,9 +744,9 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* 3-Column Command Metric Cards */}
+                {/* 3 Metric Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-[#0b101d] p-4 rounded-xl border border-slate-800 space-y-1">
+                  <div className="glass-surface p-5 rounded-2xl space-y-1">
                     <span className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
                       <Languages className="w-3.5 h-3.5 text-cyan-400" />
                       Language Telemetry
@@ -758,7 +759,7 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="bg-[#0b101d] p-4 rounded-xl border border-slate-800 space-y-1">
+                  <div className="glass-surface p-5 rounded-2xl space-y-1">
                     <span className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
                       <Building2 className="w-3.5 h-3.5 text-amber-400" />
                       Digital Trust Status
@@ -771,7 +772,7 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="bg-[#0b101d] p-4 rounded-xl border border-slate-800 space-y-1">
+                  <div className="glass-surface p-5 rounded-2xl space-y-1">
                     <span className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
                       <Fingerprint className="w-3.5 h-3.5 text-rose-400" />
                       SHA-256 Chain of Custody
@@ -785,8 +786,8 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Quick Actions & Next Move Banner */}
-                <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+                {/* Actions & Next Move Banner */}
+                <div className="glass-surface p-6 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-4">
                   <div className="space-y-1">
                     <span className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5">
                       <Zap className="w-4 h-4 text-amber-400" />
@@ -799,14 +800,14 @@ export default function Home() {
                   <div className="flex gap-2 shrink-0">
                     <button
                       onClick={() => setActiveTab("analyzer")}
-                      className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-mono text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-cyan-600/30"
+                      className="px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-mono text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-cyan-600/30 active:scale-95"
                     >
                       <span>DEEP SCAN REPORT</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={handleDownloadDossier}
-                      className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono text-xs font-bold transition flex items-center gap-1.5 border border-slate-700"
+                      className="px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-mono text-xs font-bold transition flex items-center gap-1.5 active:scale-95"
                     >
                       <Download className="w-3.5 h-3.5 text-cyan-400" />
                       <span>EXPORT 1930 DOSSIER</span>
@@ -819,50 +820,49 @@ export default function Home() {
             {/* SECTION 2: SCAM ANALYZER */}
             {activeTab === "analyzer" && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-2">
                   <h3 className="font-mono text-base font-bold text-white flex items-center gap-2">
                     <Search className="w-5 h-5 text-cyan-400" />
                     <span>COMPREHENSIVE SCAM INVESTIGATION REPORT</span>
                   </h3>
                   <span className="text-xs font-mono text-slate-400">
-                    Investigation ID: {investigation.investigationId}
+                    ID: {investigation.investigationId}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                  {/* Left Column: Original Message & Extracted Indicators */}
                   <div className="lg:col-span-6 space-y-4">
-                    <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <div className="glass-surface p-6 rounded-3xl space-y-3">
                       <span className="text-xs font-mono font-bold text-slate-400 uppercase block">
                         Original Submitted Payload
                       </span>
-                      <div className="bg-[#070b14] p-3 rounded-xl border border-slate-800 font-mono text-xs text-cyan-200 leading-relaxed whitespace-pre-wrap">
+                      <div className="bg-[#030611]/80 p-4 rounded-2xl font-mono text-xs text-cyan-200 leading-relaxed whitespace-pre-wrap border border-white/5">
                         {investigation.rawPayload}
                       </div>
                       <div className="flex flex-wrap gap-2 text-xs font-mono">
-                        <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">
+                        <span className="px-2.5 py-1 rounded-full bg-slate-800/60 text-slate-400">
                           Language: {investigation.language.languageName} ({Math.round(investigation.language.confidence * 100)}%)
                         </span>
-                        <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">
+                        <span className="px-2.5 py-1 rounded-full bg-slate-800/60 text-slate-400">
                           Scripts: {investigation.language.detectedScripts.join(", ")}
                         </span>
                       </div>
                     </div>
 
-                    <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-3 font-mono text-xs">
+                    <div className="glass-surface p-6 rounded-3xl space-y-3 font-mono text-xs">
                       <span className="text-xs font-bold text-slate-400 uppercase block">
                         Extracted Actionable Indicators
                       </span>
-                      <div className="space-y-2">
-                        <div className="flex justify-between py-1 border-b border-slate-800">
+                      <div className="space-y-2.5">
+                        <div className="flex justify-between py-1">
                           <span className="text-slate-500">Domains Detected:</span>
                           <span className="text-cyan-300 font-bold">{investigation.indicators.domains.join(", ") || "None"}</span>
                         </div>
-                        <div className="flex justify-between py-1 border-b border-slate-800">
+                        <div className="flex justify-between py-1">
                           <span className="text-slate-500">Phone Numbers:</span>
                           <span className="text-slate-200">{investigation.indicators.phoneNumbers.join(", ") || "None"}</span>
                         </div>
-                        <div className="flex justify-between py-1 border-b border-slate-800">
+                        <div className="flex justify-between py-1">
                           <span className="text-slate-500">Claimed Organization:</span>
                           <span className="text-amber-300 font-bold">{investigation.indicators.claimedOrganizations[0] || "None Claimed"}</span>
                         </div>
@@ -874,9 +874,8 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Right Column: Explainable Risk Score Breakdown */}
                   <div className="lg:col-span-6 space-y-4">
-                    <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-4">
+                    <div className="glass-surface p-6 rounded-3xl space-y-4">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-mono font-bold text-slate-400 uppercase">
                           Explainable Risk Score Breakdown
@@ -886,25 +885,18 @@ export default function Home() {
                         </span>
                       </div>
 
-                      <p className="text-[11px] text-slate-400 font-mono">
-                        Label: {investigation.riskIntelligence.scoreLabel}
-                      </p>
-
                       <div className="space-y-3">
                         {investigation.riskIntelligence.breakdown.map((factor, idx) => (
-                          <div key={idx} className="bg-[#070b14] p-3 rounded-xl border border-slate-800/80 font-mono text-xs space-y-1">
+                          <div key={idx} className="bg-[#030611]/80 p-3.5 rounded-2xl font-mono text-xs space-y-1 border border-white/5">
                             <div className="flex justify-between items-center">
                               <span className="text-white font-bold">{factor.factor}</span>
                               <span className="text-cyan-400 font-bold">
-                                Score: {factor.score} × {factor.weight} = +{factor.contribution} pts
+                                +{factor.contribution} pts
                               </span>
                             </div>
                             <p className="text-[11px] text-slate-400 leading-tight">
                               {factor.reasoning}
                             </p>
-                            <div className="text-[9px] uppercase font-bold text-slate-500">
-                              Data Source: {factor.dataSource}
-                            </div>
                           </div>
                         ))}
                       </div>
@@ -917,64 +909,52 @@ export default function Home() {
             {/* SECTION 3: SCAM DNA EXPLORER */}
             {activeTab === "scamDna" && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-2">
                   <h3 className="font-mono text-base font-bold text-white flex items-center gap-2">
                     <Dna className="w-5 h-5 text-cyan-400" />
                     <span>SCAM DNA INTELLIGENCE & INCIDENT RELATIONSHIP GRAPH</span>
                   </h3>
                   <span className="text-xs font-mono text-slate-400">
-                    Fingerprint ID: {investigation.scamDna.fingerprint.fingerprintId}
-                  </span>
-                </div>
-
-                <div className="p-3 rounded-xl bg-amber-950/40 border border-amber-600/50 text-xs font-mono text-amber-300 flex items-start gap-2">
-                  <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
-                  <span>
-                    <strong>CRITICAL ATTRIBUTION DISCLAIMER:</strong> High similarity scores and campaign links indicate shared language patterns, modus operandi, and technical templates; they do <em>NOT</em> constitute legal or forensic proof that incidents originated from the same criminal perpetrator.
+                    ID: {investigation.scamDna.fingerprint.fingerprintId}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                  {/* Left Column: DNA Fingerprint & Matched Campaigns */}
                   <div className="lg:col-span-6 space-y-4 font-mono text-xs">
-                    <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <div className="glass-surface p-6 rounded-3xl space-y-3">
                       <span className="text-xs font-bold text-slate-300 uppercase block">
                         DNA Fingerprint Characteristics
                       </span>
                       <div className="space-y-2">
-                        <div className="flex justify-between py-1 border-b border-slate-800">
-                          <span className="text-slate-500">Primary Tactical Vector:</span>
+                        <div className="flex justify-between py-1">
+                          <span className="text-slate-500">Primary Vector:</span>
                           <span className="text-cyan-300 font-bold">{investigation.scamDna.fingerprint.primaryVector}</span>
                         </div>
-                        <div className="flex justify-between py-1 border-b border-slate-800">
+                        <div className="flex justify-between py-1">
                           <span className="text-slate-500">Cluster Category:</span>
                           <span className="text-slate-200">{investigation.scamDna.fingerprint.clusterCategory}</span>
                         </div>
-                        <div className="flex justify-between py-1 border-b border-slate-800">
-                          <span className="text-slate-500">Target Delivery Medium:</span>
-                          <span className="text-slate-200">{investigation.scamDna.fingerprint.targetMedium}</span>
-                        </div>
                         <div className="flex justify-between py-1">
-                          <span className="text-slate-500">Claimed Organization:</span>
-                          <span className="text-amber-300 font-bold">{investigation.scamDna.fingerprint.claimedOrg}</span>
+                          <span className="text-slate-500">Medium:</span>
+                          <span className="text-slate-200">{investigation.scamDna.fingerprint.targetMedium}</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <div className="glass-surface p-6 rounded-3xl space-y-3">
                       <span className="text-xs font-bold text-slate-300 uppercase block">
-                        Similar Historical Scam Campaigns ({investigation.scamDna.similarCampaigns.length})
+                        Similar Historical Campaigns
                       </span>
                       <div className="space-y-3">
                         {investigation.scamDna.similarCampaigns.map((camp) => (
-                          <div key={camp.campaignId} className="bg-[#070b14] p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+                          <div key={camp.campaignId} className="bg-[#030611]/80 p-3.5 rounded-2xl border border-white/5 space-y-1.5">
                             <div className="flex justify-between items-center">
                               <span className="text-white font-bold">{camp.campaignName}</span>
-                              <span className="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-black">
+                              <span className="px-2.5 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-800/40 font-bold">
                                 {Math.round(camp.similarityScore * 100)}% Similarity
                               </span>
                             </div>
-                            <p className="text-[11px] text-slate-400">
+                            <p className="text-[11px] text-slate-400 leading-relaxed">
                               {camp.explanation}
                             </p>
                           </div>
@@ -983,31 +963,46 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Right Column: Node-Link Graph */}
-                  <div className="lg:col-span-6 bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-4">
+                  <div className="lg:col-span-6 glass-surface p-6 rounded-3xl space-y-4">
                     <span className="text-xs font-mono font-bold text-slate-300 uppercase block">
                       Interactive Node-Link Campaign Graph
                     </span>
-                    <div className="relative w-full h-80 bg-[#070b14] rounded-xl border border-slate-800 overflow-hidden p-4 flex items-center justify-center">
+                    <div className="relative w-full h-80 bg-[#020509]/90 rounded-2xl overflow-hidden p-4 flex items-center justify-center">
                       <svg className="w-full h-full" viewBox="0 0 400 300">
-                        <line x1="200" y1="150" x2="80" y2="70" stroke="#0891b2" strokeWidth="2" strokeDasharray="3 3" />
-                        <line x1="200" y1="150" x2="320" y2="70" stroke="#f59e0b" strokeWidth="2" strokeDasharray="3 3" />
-                        <line x1="200" y1="150" x2="80" y2="230" stroke="#ef4444" strokeWidth="2" strokeDasharray="3 3" />
-                        <line x1="200" y1="150" x2="320" y2="230" stroke="#8b5cf6" strokeWidth="2" strokeDasharray="3 3" />
+                        {/* Animated dashed edges */}
+                        <line x1="200" y1="150" x2="80" y2="70" stroke="#0891b2" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.7">
+                          <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.5s" repeatCount="indefinite" />
+                        </line>
+                        <line x1="200" y1="150" x2="320" y2="70" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.7">
+                          <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.9s" repeatCount="indefinite" />
+                        </line>
+                        <line x1="200" y1="150" x2="80" y2="230" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.7">
+                          <animate attributeName="stroke-dashoffset" values="0;-16" dur="1.3s" repeatCount="indefinite" />
+                        </line>
+                        <line x1="200" y1="150" x2="320" y2="230" stroke="#8b5cf6" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.7">
+                          <animate attributeName="stroke-dashoffset" values="0;-16" dur="2.2s" repeatCount="indefinite" />
+                        </line>
 
-                        <circle cx="200" cy="150" r="28" fill="#0f172a" stroke="#06b6d4" strokeWidth="3" />
-                        <text x="200" y="153" fill="#ffffff" fontSize="9" textAnchor="middle" fontWeight="bold" fontFamily="monospace">INCIDENT</text>
+                        {/* Central incident node with pulse ring */}
+                        <circle cx="200" cy="150" r="34" fill="rgba(6,182,212,0.08)" stroke="#06b6d4" strokeWidth="1" opacity="0.4">
+                          <animate attributeName="r" values="34;42;34" dur="2s" repeatCount="indefinite" />
+                          <animate attributeName="opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite" />
+                        </circle>
+                        <circle cx="200" cy="150" r="26" fill="#060f1e" stroke="#06b6d4" strokeWidth="2.5" />
+                        <text x="200" y="147" fill="#ffffff" fontSize="8" textAnchor="middle" fontWeight="bold" fontFamily="monospace">INCIDENT</text>
+                        <text x="200" y="157" fill="#06b6d4" fontSize="7" textAnchor="middle" fontFamily="monospace">TARGET</text>
 
-                        <circle cx="80" cy="70" r="22" fill="#0f172a" stroke="#0891b2" strokeWidth="2" />
+                        {/* Satellite nodes */}
+                        <circle cx="80" cy="70" r="20" fill="#060f1e" stroke="#0891b2" strokeWidth="1.8" />
                         <text x="80" y="73" fill="#06b6d4" fontSize="8" textAnchor="middle" fontFamily="monospace">Domain</text>
 
-                        <circle cx="320" cy="70" r="22" fill="#0f172a" stroke="#f59e0b" strokeWidth="2" />
+                        <circle cx="320" cy="70" r="20" fill="#060f1e" stroke="#f59e0b" strokeWidth="1.8" />
                         <text x="320" y="73" fill="#fbbf24" fontSize="8" textAnchor="middle" fontFamily="monospace">Phone</text>
 
-                        <circle cx="80" cy="230" r="22" fill="#0f172a" stroke="#ef4444" strokeWidth="2" />
+                        <circle cx="80" cy="230" r="20" fill="#060f1e" stroke="#ef4444" strokeWidth="1.8" />
                         <text x="80" y="233" fill="#f87171" fontSize="8" textAnchor="middle" fontFamily="monospace">VoltTrap</text>
 
-                        <circle cx="320" cy="230" r="22" fill="#0f172a" stroke="#8b5cf6" strokeWidth="2" />
+                        <circle cx="320" cy="230" r="20" fill="#060f1e" stroke="#8b5cf6" strokeWidth="1.8" />
                         <text x="320" y="233" fill="#c084fc" fontSize="8" textAnchor="middle" fontFamily="monospace">Cluster</text>
                       </svg>
                     </div>
@@ -1019,7 +1014,7 @@ export default function Home() {
             {/* SECTION 4: FUTURE ATTACK SIMULATOR */}
             {activeTab === "futureAttack" && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-2">
                   <h3 className="font-mono text-base font-bold text-white flex items-center gap-2">
                     <Workflow className="w-5 h-5 text-amber-400" />
                     <span>PREDICTIVE ATTACK-CHAIN SIMULATOR (OBSERVED ➔ INFERRED ➔ PREDICTED)</span>
@@ -1030,19 +1025,19 @@ export default function Home() {
                   {investigation.futureAttackSimulation.stages.map((stage) => (
                     <div
                       key={stage.stageNumber}
-                      className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-start gap-4 font-mono text-xs"
+                      className="glass-surface p-6 rounded-3xl flex flex-col md:flex-row items-start gap-5 font-mono text-xs transition-all duration-300 hover:-translate-y-1"
                     >
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-cyan-300 text-sm">
+                      <div className="flex items-center gap-2.5 shrink-0">
+                        <span className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-cyan-300 text-sm">
                           {stage.stageNumber}
                         </span>
                         <span
-                          className={`px-2.5 py-1 rounded font-black uppercase text-[10px] ${
+                          className={`px-3 py-1 rounded-full font-bold uppercase text-[10px] ${
                             stage.status === "Observed"
-                              ? "bg-emerald-950 text-emerald-300 border border-emerald-800"
+                              ? "bg-emerald-950 text-emerald-300 border border-emerald-800/40"
                               : stage.status === "Inferred"
-                              ? "bg-amber-950 text-amber-300 border border-amber-800"
-                              : "bg-red-950 text-red-300 border border-red-800"
+                              ? "bg-amber-950 text-amber-300 border border-amber-800/40"
+                              : "bg-red-950 text-red-300 border border-red-800/40"
                           }`}
                         >
                           {stage.status}
@@ -1052,16 +1047,16 @@ export default function Home() {
                       <div className="flex-1 space-y-2">
                         <h4 className="text-sm font-bold text-white">{stage.stageName}</h4>
                         <p className="text-slate-300 leading-relaxed">{stage.description}</p>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-2 border-t border-slate-800/80 text-[11px]">
-                          <div className="bg-[#070b14] p-2 rounded-lg border border-slate-800">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-2 text-[11px]">
+                          <div className="bg-[#030611]/80 p-3 rounded-2xl border border-white/5">
                             <strong className="text-cyan-400 block mb-0.5">Evidence:</strong>
                             <span className="text-slate-400">{stage.evidence}</span>
                           </div>
-                          <div className="bg-[#070b14] p-2 rounded-lg border border-slate-800">
+                          <div className="bg-[#030611]/80 p-3 rounded-2xl border border-white/5">
                             <strong className="text-red-400 block mb-0.5">Consequences:</strong>
                             <span className="text-slate-400">{stage.potentialConsequences}</span>
                           </div>
-                          <div className="bg-[#070b14] p-2 rounded-lg border border-slate-800">
+                          <div className="bg-[#030611]/80 p-3 rounded-2xl border border-white/5">
                             <strong className="text-emerald-400 block mb-0.5">Countermeasure:</strong>
                             <span className="text-slate-300">{stage.preventionStep}</span>
                           </div>
@@ -1073,51 +1068,44 @@ export default function Home() {
               </div>
             )}
 
-            {/* SECTION 5: THREAT INTELLIGENCE WITH PULSING TARGET RADAR */}
+            {/* SECTION 5: THREAT INTELLIGENCE */}
             {activeTab === "threatIntel" && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-2">
                   <h3 className="font-mono text-base font-bold text-white flex items-center gap-2">
                     <Globe className="w-5 h-5 text-cyan-400" />
                     <span>GLOBAL THREAT INFRASTRUCTURE INTELLIGENCE</span>
                   </h3>
                 </div>
 
-                <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-4">
-                  {/* SVG Vector World Map with Multiple Expanding Sonar Rings */}
-                  <div className="relative w-full h-72 bg-[#050811] rounded-xl border border-slate-800 overflow-hidden flex items-center justify-center">
-                    <svg className="w-full h-full opacity-30" viewBox="0 0 100 60">
+                <div className="glass-surface p-6 rounded-3xl space-y-4">
+                <div className="relative w-full h-72 bg-[#020509]/90 rounded-2xl overflow-hidden flex items-center justify-center">
+                    <svg className="w-full h-full opacity-20" viewBox="0 0 100 60">
                       <path
                         d="M10,20 Q25,10 35,22 Q40,30 30,45 Q20,50 15,35 Z M45,15 Q65,12 85,20 Q90,35 75,45 Q60,48 50,35 Z M50,30 Q60,25 70,35 Q65,55 50,45 Z"
                         fill="#334155"
                       />
                     </svg>
-
-                    {/* Expanding Sonar Waves */}
                     <div className="absolute z-10 flex flex-col items-center">
-                      <span className="w-16 h-16 rounded-full bg-red-500/20 animate-ping absolute"></span>
-                      <span className="w-10 h-10 rounded-full bg-red-500/30 animate-pulse absolute"></span>
-                      <span className="w-4 h-4 rounded-full bg-red-500 border-2 border-white shadow-xl flex items-center justify-center">
-                        <Crosshair className="w-2.5 h-2.5 text-black" />
+                      <span className="w-20 h-20 rounded-full bg-red-500/15 absolute animate-ping" style={{animationDuration:"2s"}} />
+                      <span className="w-10 h-10 rounded-full bg-red-500/25 animate-pulse absolute" />
+                      <span className="w-5 h-5 rounded-full bg-red-500 border-2 border-white shadow-xl flex items-center justify-center relative">
+                        <Crosshair className="w-3 h-3 text-black" />
                       </span>
-                      <span className="mt-2 text-[10px] font-mono font-bold bg-black/90 text-red-300 px-2 py-0.5 rounded border border-red-800 shadow-md">
+                      <span className="mt-3 text-[10px] font-mono font-bold bg-black/90 text-red-300 px-2.5 py-0.5 rounded-full shadow-md relative">
                         {investigation.threatIntelligence.infrastructureLocation.city}, {investigation.threatIntelligence.infrastructureLocation.country}
                       </span>
                     </div>
                   </div>
 
                   <div className="space-y-2 font-mono text-xs pt-2">
-                    <div className="flex justify-between py-1.5 border-b border-slate-800">
+                    <div className="flex justify-between py-1.5">
                       <span className="text-slate-500">Hosting ASN:</span>
                       <strong className="text-amber-300">{investigation.threatIntelligence.asnInfo}</strong>
                     </div>
-                    <div className="flex justify-between py-1.5 border-b border-slate-800">
+                    <div className="flex justify-between py-1.5">
                       <span className="text-slate-500">Domain Assessment:</span>
                       <strong className="text-red-400">{investigation.threatIntelligence.domainReputation}</strong>
-                    </div>
-                    <div className="flex justify-between py-1.5">
-                      <span className="text-slate-500">Infrastructure Node:</span>
-                      <strong className="text-cyan-300">{investigation.threatIntelligence.infrastructureLocation.city}, {investigation.threatIntelligence.infrastructureLocation.country}</strong>
                     </div>
                   </div>
                 </div>
@@ -1127,7 +1115,7 @@ export default function Home() {
             {/* SECTION 6: PSYCHOLOGY ANALYSIS */}
             {activeTab === "psychology" && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-2">
                   <h3 className="font-mono text-base font-bold text-white flex items-center gap-2">
                     <BrainCircuit className="w-5 h-5 text-cyan-400" />
                     <span>EXPLAINABLE PSYCHOLOGICAL SOCIAL ENGINEERING DECOMPILER</span>
@@ -1135,14 +1123,14 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {investigation.psychology.detectedTactics.map((tactic, idx) => (
-                    <div key={idx} className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-3 font-mono text-xs">
+                    <div key={idx} className="glass-surface p-6 rounded-3xl space-y-3 font-mono text-xs">
                       <div className="flex justify-between items-center">
                         <span className="font-bold text-white text-sm">{tactic.category}</span>
-                        <span className="px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-800 font-bold text-[10px]">
+                        <span className="px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-300 font-bold text-[10px]">
                           {tactic.severity}
                         </span>
                       </div>
-                      <div className="bg-[#070b14] p-3 rounded-xl border border-red-500/30 text-red-200">
+                      <div className="bg-[#030611]/80 p-3.5 rounded-2xl text-red-200 border border-red-500/20">
                         <span className="text-[10px] uppercase text-slate-500 block mb-1">Exact In-Text Phrase:</span>
                         <strong>"{tactic.highlightedPhrase}"</strong>
                       </div>
@@ -1156,13 +1144,13 @@ export default function Home() {
             {/* SECTION 7: DIGITAL TRUST */}
             {activeTab === "trust" && (
               <div className="space-y-6 font-mono text-xs">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-2">
                   <h3 className="font-mono text-base font-bold text-white flex items-center gap-2">
                     <Building2 className="w-5 h-5 text-amber-400" />
                     <span>ORGANIZATION IMPERSONATION & DIGITAL TRUST VERIFICATION</span>
                   </h3>
                 </div>
-                <div className="bg-[#0b101d] p-6 rounded-2xl border border-slate-800 space-y-3">
+                <div className="glass-surface p-6 rounded-3xl space-y-3">
                   <div className="text-slate-400">Claimed: <strong className="text-white">{investigation.trustVerification.claimedOrganization}</strong></div>
                   <div className="text-slate-400">Official Domain: <strong className="text-emerald-400">{investigation.trustVerification.officialDomain || "None"}</strong></div>
                   <p className="text-slate-300 leading-relaxed text-sm pt-2">
@@ -1175,7 +1163,7 @@ export default function Home() {
             {/* SECTION 8: DEFENCE CENTRE */}
             {activeTab === "defence" && (
               <div className="space-y-6 font-mono text-xs">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 gap-2">
                   <h3 className="font-mono text-base font-bold text-white flex items-center gap-2">
                     <Lock className="w-5 h-5 text-cyan-400" />
                     <span>AUTONOMOUS DEFENCE AGENT // HUMAN-IN-THE-LOOP APPROVAL</span>
@@ -1184,14 +1172,14 @@ export default function Home() {
                     <button
                       onClick={handleExecuteSandbox}
                       disabled={sandboxExecuted || defenceRules.every((r) => r.approvalStatus !== "APPROVED")}
-                      className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-black font-bold uppercase disabled:opacity-40 transition"
+                      className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-bold uppercase disabled:opacity-40 transition active:scale-95"
                     >
                       {sandboxExecuted ? "SANDBOX ISOLATION ACTIVE" : "EXECUTE APPROVED RULES IN SANDBOX"}
                     </button>
                     {sandboxExecuted && (
                       <button
                         onClick={handleRollbackSandbox}
-                        className="px-3 py-1.5 rounded-lg bg-rose-950 hover:bg-rose-900 border border-rose-800 text-rose-300 font-bold uppercase"
+                        className="px-4 py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-800 text-rose-300 font-bold uppercase active:scale-95"
                       >
                         ROLLBACK
                       </button>
@@ -1201,24 +1189,24 @@ export default function Home() {
 
                 <div className="space-y-4">
                   {defenceRules.map((rule) => (
-                    <div key={rule.ruleId} className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <div key={rule.ruleId} className="glass-surface p-6 rounded-3xl space-y-3">
                       <div className="flex justify-between items-center">
                         <span className="font-bold text-white text-sm">{rule.ruleId}</span>
                         <div className="flex items-center gap-2">
-                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300">
                             {rule.approvalStatus}
                           </span>
                           {rule.approvalStatus === "PENDING_HUMAN_APPROVAL" && (
                             <>
                               <button
                                 onClick={() => handleApproveRule(rule.ruleId)}
-                                className="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-black font-bold"
+                                className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-black font-bold active:scale-95"
                               >
                                 Approve
                               </button>
                               <button
                                 onClick={() => handleRejectRule(rule.ruleId)}
-                                className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-rose-400 border border-slate-700"
+                                className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-rose-400 active:scale-95"
                               >
                                 Reject
                               </button>
@@ -1226,7 +1214,7 @@ export default function Home() {
                           )}
                         </div>
                       </div>
-                      <div className="bg-[#050811] p-3 rounded-xl border border-slate-800 overflow-x-auto">
+                      <div className="bg-[#030611]/80 p-4 rounded-2xl overflow-x-auto border border-white/5">
                         <pre className="text-emerald-400 font-mono text-[11px]">
                           <code>{rule.generatedRuleScript}</code>
                         </pre>
@@ -1240,7 +1228,7 @@ export default function Home() {
             {/* SECTION 9: FORENSICS LAB */}
             {activeTab === "forensics" && (
               <div className="space-y-6 font-mono text-xs">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-2">
                   <h3 className="font-mono text-base font-bold text-white flex items-center gap-2">
                     <Fingerprint className="w-5 h-5 text-rose-500" />
                     <span>DIGITAL FORENSICS LAB // EVIDENCE INTEGRITY REPOSITORY</span>
@@ -1248,14 +1236,14 @@ export default function Home() {
                   <div className="flex gap-2">
                     <button
                       onClick={handleDownloadDossier}
-                      className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-black font-bold flex items-center gap-1.5 shadow-md shadow-cyan-600/30 active:scale-95"
+                      className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-bold flex items-center gap-1.5 shadow-md shadow-cyan-600/30 active:scale-95"
                     >
                       <Download className="w-3.5 h-3.5" />
                       <span>POLICE 1930 DOSSIER</span>
                     </button>
                     <button
                       onClick={handleDownloadStix}
-                      className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold flex items-center gap-1.5 active:scale-95"
+                      className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold flex items-center gap-1.5 active:scale-95"
                     >
                       <FileText className="w-3.5 h-3.5" />
                       <span>STIX 2.1 JSON</span>
@@ -1264,15 +1252,15 @@ export default function Home() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-2">
+                  <div className="glass-surface p-6 rounded-3xl space-y-2">
                     <span className="text-slate-500 text-[11px] block">Original Payload SHA-256 Digest:</span>
-                    <div className="bg-[#070b14] p-3 rounded-xl border border-slate-800 text-cyan-300 break-all select-all font-bold">
+                    <div className="bg-[#030611]/80 p-3.5 rounded-2xl text-cyan-300 break-all select-all font-bold border border-white/5">
                       {investigation.forensics.originalPayloadSha256}
                     </div>
                   </div>
-                  <div className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-2">
+                  <div className="glass-surface p-6 rounded-3xl space-y-2">
                     <span className="text-slate-500 text-[11px] block">Normalized Payload SHA-256 Digest:</span>
-                    <div className="bg-[#070b14] p-3 rounded-xl border border-slate-800 text-cyan-300 break-all select-all font-bold">
+                    <div className="bg-[#030611]/80 p-3.5 rounded-2xl text-cyan-300 break-all select-all font-bold border border-white/5">
                       {investigation.forensics.normalizedPayloadSha256}
                     </div>
                   </div>
@@ -1283,7 +1271,7 @@ export default function Home() {
             {/* SECTION 10: COMMUNITY INTEL */}
             {activeTab === "community" && (
               <div className="space-y-6 font-mono text-xs">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-2">
                   <h3 className="font-mono text-base font-bold text-white flex items-center gap-2">
                     <Users className="w-5 h-5 text-cyan-400" />
                     <span>PRIVACY-PRESERVING COMMUNITY THREAT NETWORK</span>
@@ -1291,12 +1279,12 @@ export default function Home() {
                 </div>
                 <div className="space-y-3">
                   {communityReports.map((item) => (
-                    <div key={item.id} className="bg-[#0b101d] p-4 rounded-xl border border-slate-800 space-y-1.5">
+                    <div key={item.id} className="glass-surface p-5 rounded-2xl space-y-1.5">
                       <div className="flex justify-between items-center">
                         <span className="font-bold text-white">{item.category}</span>
                         <span className="text-slate-500">{item.timestamp}</span>
                       </div>
-                      <p className="text-slate-300 bg-[#070b14] p-2.5 rounded-lg border border-slate-800/80">
+                      <p className="text-slate-300 bg-[#030611]/80 p-3 rounded-xl border border-white/5">
                         "{item.sanitizedSnippet}"
                       </p>
                     </div>
@@ -1308,7 +1296,7 @@ export default function Home() {
             {/* SECTION 11: AWARENESS TRAINING */}
             {activeTab === "training" && (
               <div className="space-y-6 font-mono text-xs">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 gap-2">
                   <h3 className="font-mono text-base font-bold text-white flex items-center gap-2">
                     <GraduationCap className="w-5 h-5 text-cyan-400" />
                     <span>INTERACTIVE MULTILINGUAL SCAM RECOGNITION LAB</span>
@@ -1325,15 +1313,15 @@ export default function Home() {
                     const isCorrect = userGuess === scenario.isScam;
 
                     return (
-                      <div key={scenario.id} className="bg-[#0b101d] p-5 rounded-2xl border border-slate-800 space-y-3">
+                      <div key={scenario.id} className="glass-surface p-6 rounded-3xl space-y-3">
                         <div className="flex justify-between items-center">
                           <span className="font-bold text-white">{scenario.title}</span>
-                          <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px]">
+                          <span className="px-2.5 py-0.5 rounded-full bg-slate-800/60 text-slate-300 text-[10px]">
                             {scenario.languageLabel}
                           </span>
                         </div>
 
-                        <div className="bg-[#070b14] p-3 rounded-xl border border-slate-800 text-slate-200">
+                        <div className="bg-[#030611]/80 p-3.5 rounded-2xl text-slate-200 border border-white/5">
                           "{scenario.messageText}"
                         </div>
 
@@ -1341,23 +1329,23 @@ export default function Home() {
                           <div className="flex gap-2 pt-1">
                             <button
                               onClick={() => handleQuizAnswer(scenario, true)}
-                              className="flex-1 py-2 rounded-lg bg-red-950 hover:bg-red-900 border border-red-800 text-red-300 font-bold active:scale-95"
+                              className="flex-1 py-2.5 rounded-xl bg-red-950/60 hover:bg-red-900 border border-red-800/40 text-red-300 font-bold active:scale-95"
                             >
                               Mark as Fraudulent
                             </button>
                             <button
                               onClick={() => handleQuizAnswer(scenario, false)}
-                              className="flex-1 py-2 rounded-lg bg-emerald-950 hover:bg-emerald-900 border border-emerald-800 text-emerald-300 font-bold active:scale-95"
+                              className="flex-1 py-2.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-800/40 text-emerald-300 font-bold active:scale-95"
                             >
                               Mark as Legitimate
                             </button>
                           </div>
                         ) : (
                           <div
-                            className={`p-3 rounded-xl border space-y-1 ${
+                            className={`p-4 rounded-2xl space-y-1 ${
                               isCorrect
-                                ? "bg-emerald-950/40 border-emerald-600 text-emerald-300"
-                                : "bg-red-950/40 border-red-600 text-red-300"
+                                ? "bg-emerald-950/40 border border-emerald-600/40 text-emerald-300"
+                                : "bg-red-950/40 border border-red-600/40 text-red-300"
                             }`}
                           >
                             <div className="font-bold">
@@ -1378,7 +1366,7 @@ export default function Home() {
             {/* SECTION 12: INCIDENT HISTORY */}
             {activeTab === "history" && (
               <div className="space-y-6 font-mono text-xs">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-2">
                   <h3 className="font-mono text-base font-bold text-white flex items-center gap-2">
                     <History className="w-5 h-5 text-cyan-400" />
                     <span>INCIDENT AUDIT LOGS & SESSION INVESTIGATIONS</span>
@@ -1388,7 +1376,7 @@ export default function Home() {
 
                 <div className="space-y-3">
                   {historyList.map((item) => (
-                    <div key={item.investigationId} className="bg-[#0b101d] p-4 rounded-xl border border-slate-800 flex items-center justify-between gap-4">
+                    <div key={item.investigationId} className="glass-surface p-5 rounded-2xl flex items-center justify-between gap-4">
                       <div className="space-y-1">
                         <strong className="text-white">{item.investigationId}</strong>
                         <p className="text-slate-400 text-[11px] truncate max-w-lg">
@@ -1408,8 +1396,8 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-900 bg-[#060810] py-5 font-mono text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <footer className="bg-[#03050c]/80 backdrop-blur-md py-5 font-mono text-xs text-slate-500 relative z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="text-white font-bold">AEGIS OMEGA</span>
             <span>//</span>
