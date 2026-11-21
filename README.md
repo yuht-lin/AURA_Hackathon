@@ -124,13 +124,52 @@ Each "agent" does one job. Together they form the analysis pipeline.
 
 - **Frontend:** Next.js 14.2 (App Router), React 18, Tailwind CSS, Lucide React
 - **Backend:** Next.js serverless API routes (`/api/analyze`, `/api/community`, `/api/export`)
-- **Languages:** TypeScript, Python (blocking-rule generator)
+- **Language:** TypeScript (the blocking-rule generator is TypeScript too)
 - **Hashing:** Node.js `crypto` (SHA-256)
 - **Hosting:** Vercel
 
 ---
 
-## 9. Run it yourself
+## 9. Quality: tests, security and accessibility
+
+**Automated tests (62 tests, Vitest).** Run them with `npm test`.
+- Every analysis agent is tested: message cleaning, language detection, pressure-tactic detection, lookalike-domain checks, risk scoring, forensic hashing, defence rules and report generation
+- All three API routes are tested, including bad input, oversized messages and rate limiting
+- The tests check the important promises: scams score higher than genuine messages, blocking rules always wait for human approval, personal data is removed from community reports, and the SHA-256 hash is correct
+
+**Security**
+- Input is validated on every API route (type, length limit of 5,000 characters, safe JSON parsing)
+- Rate limiting on every API route
+- Community reports are stripped of HTML and personal data (phone numbers, emails, card numbers, OTPs)
+- Security headers: `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `Strict-Transport-Security`
+- Errors never leak internal details to the user
+- No secrets in the repository, and no API keys are required
+
+**Accessibility**
+- Skip-to-content link, proper page landmarks and a labelled message box
+- Screen readers announce the result ("Risk score 72 out of 100, level HIGH") and any error
+- Every button has a clear name, and the Simple/SOC toggle announces which view is active
+- Visible keyboard focus on every control, and full keyboard use
+- Higher text contrast and no tiny text
+- Animations switch off automatically for people who choose "reduce motion"
+- Decorative effects are hidden from screen readers
+
+**Efficiency**
+- Removed a timer that re-drew the whole page every second
+- Removed an unused dependency, so installs are smaller
+
+**Checks you can run**
+
+```bash
+npm test          # 62 automated tests
+npm run typecheck # TypeScript
+npm run lint      # code style
+npm run check     # all three
+```
+
+---
+
+## 10. Run it yourself
 
 ```bash
 git clone https://github.com/yuht-lin/AURA_Hackathon.git
@@ -141,32 +180,22 @@ npm run dev
 
 Open http://localhost:3000.
 
-**Optional:** add `GEMINI_API_KEY` as an environment variable to turn on extra AI reasoning. **It works without it**, because the built-in multi-agent engine handles everything on its own.
+**No API key is needed.** The built-in multi-agent engine runs the whole analysis on its own.
 
 ### Deploy on Vercel
 
 1. Push the code to GitHub: `git push -u origin main`
 2. Go to [vercel.com](https://vercel.com), click **Add New**, then **Project**, and pick `AURA_Hackathon`.
-3. (Optional) add `GEMINI_API_KEY`.
-4. Click **Deploy**. It is live in about a minute.
+3. Click **Deploy**. It is live in about a minute.
 
 ---
 
-## 10. If you are being scammed
+## 11. If you are being scammed
 
 - Never share your **OTP, PIN or password**.
 - Do not click unknown links or install unknown apps.
 - Call **1930** (National Cyber Crime Helpline) or report at **cybercrime.gov.in**.
 - If money has moved, call your bank straight away.
-
----
-
-## 11. Hackathon rules check
-
-- ✅ Repository size under 200 KB (limit is 10 MB)
-- ✅ Single branch: `main`
-- ✅ Public GitHub repository
-- ✅ Production build passes with 0 errors (`npm run build`)
 
 ---
 
