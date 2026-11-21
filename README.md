@@ -161,4 +161,13 @@ Open http://localhost:3000.
 
 ---
 
+## 11. Hackathon rules check
+
+- ✅ Repository size under 200 KB (limit is 10 MB)
+- ✅ Single branch: `main`
+- ✅ Public GitHub repository
+- ✅ Production build passes with 0 errors (`npm run build`)
+
+---
+
 **Built by Jyotishmoi Boro** for Hack2Skill PromptWars x Code1 Innovators.

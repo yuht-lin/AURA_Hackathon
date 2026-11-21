@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+import { cleanShortText, sanitizePii } from "@/lib/security/sanitize";
+import { clientKey, isRateLimited } from "@/lib/security/rateLimit";
+import { MAX_MESSAGE_LENGTH, jsonError, readJson } from "@/lib/security/http";
 
 export interface CommunityReport {
   id: string;
@@ -50,15 +53,6 @@ const COMMUNITY_FEED: CommunityReport[] = [
   }
 ];
 
-// Helper to sanitize PII
-function sanitizePii(rawText: string): string {
-  return rawText
-    .replace(/(?:\+91[\-\s]?)?[6-9]\d{9}/g, "[REDACTED_PHONE_NUMBER]")
-    .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "[REDACTED_EMAIL]")
-    .replace(/\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/g, "[REDACTED_CARD_NUMBER]")
-    .replace(/\b\d{6}\b/g, "[REDACTED_OTP_OR_PIN]");
-}
-
 export async function GET() {
   return NextResponse.json({
     reports: COMMUNITY_FEED,
@@ -73,28 +67,35 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const { rawText, category, targetedSector } = body;
-
-    if (!rawText || rawText.length < 10) {
-      return NextResponse.json({ error: "Invalid report content. Minimum 10 characters required." }, { status: 400 });
-    }
-
-    const sanitizedSnippet = sanitizePii(rawText);
-    const newReport: CommunityReport = {
-      id: `COMM-${Math.floor(1000 + Math.random() * 9000)}`,
-      timestamp: "Just now",
-      category: category || "Suspicious Digital Communication",
-      sanitizedSnippet: sanitizedSnippet.slice(0, 200),
-      targetedSector: targetedSector || "General Public",
-      upvotes: 1,
-      threatLevel: "HIGH",
-    };
-
-    COMMUNITY_FEED.unshift(newReport);
-    return NextResponse.json({ success: true, report: newReport });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  if (isRateLimited(`community:${clientKey(request)}`, 10)) {
+    return jsonError("Too many reports. Please wait a minute and try again.", 429);
   }
+
+  const body = await readJson(request);
+  if (!body) {
+    return jsonError("Request body must be valid JSON.", 400);
+  }
+
+  const rawText = typeof body.rawText === "string" ? body.rawText : "";
+  if (rawText.trim().length < 10) {
+    return jsonError("Invalid report content. Minimum 10 characters required.", 400);
+  }
+  if (rawText.length > MAX_MESSAGE_LENGTH) {
+    return jsonError(`Report is too long. Maximum is ${MAX_MESSAGE_LENGTH} characters.`, 413);
+  }
+
+  const sanitizedSnippet = sanitizePii(cleanShortText(rawText, MAX_MESSAGE_LENGTH));
+  const newReport: CommunityReport = {
+    id: `COMM-${Math.floor(1000 + Math.random() * 9000)}`,
+    timestamp: "Just now",
+    category: cleanShortText(body.category, 120) || "Suspicious Digital Communication",
+    sanitizedSnippet: sanitizedSnippet.slice(0, 200),
+    targetedSector: cleanShortText(body.targetedSector, 120) || "General Public",
+    upvotes: 1,
+    threatLevel: "HIGH",
+  };
+
+  COMMUNITY_FEED.unshift(newReport);
+  if (COMMUNITY_FEED.length > 50) COMMUNITY_FEED.length = 50;
+  return NextResponse.json({ success: true, report: newReport });
 }
